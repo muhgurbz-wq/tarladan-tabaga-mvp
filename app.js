@@ -1,20 +1,92 @@
-const products=[
- {name:'Domates',cat:'Sebze',emoji:'🍅',place:'Kahramanmaraş',producer:'Bereket Çiftliği',price:'24 ₺/kg',stock:'320 kg stok'},
- {name:'Kapya Biber',cat:'Sebze',emoji:'🌶️',place:'Gaziantep',producer:'Güneş Tarım',price:'31 ₺/kg',stock:'180 kg stok'},
- {name:'Elma',cat:'Meyve',emoji:'🍎',place:'Niğde',producer:'Yayla Bahçesi',price:'27 ₺/kg',stock:'250 kg stok'},
- {name:'Üzüm',cat:'Meyve',emoji:'🍇',place:'Manisa',producer:'Bağ Evi',price:'36 ₺/kg',stock:'140 kg stok'},
- {name:'Doğal Bal',cat:'Doğal Ürün',emoji:'🍯',place:'Kahramanmaraş',producer:'Dağ Arıcılığı',price:'290 ₺/kg',stock:'42 kg stok'},
- {name:'Ceviz',cat:'Doğal Ürün',emoji:'🌰',place:'Malatya',producer:'Anadolu Bahçesi',price:'175 ₺/kg',stock:'75 kg stok'}
+const stages=[
+  {
+    hero:'Sipariş oluşturuldu',state:'ÜRETİCİ ONAYI BEKLENİYOR',code:'TT-DEMO-001',icon:'📱',step:'ADIM 01',status:'SİPARİŞ OLUŞTU',
+    title:'Vatandaş mobil uygulamadan sipariş verir.',
+    text:'Seçilen ürün, miktar ve teslimat noktası tek talep kaydında üretici eşleştirmesine hazır hale gelir.',
+    data:[['Talep','Yerel ürün siparişi'],['Kaynak','Kahramanmaraş üreticisi'],['Durum','Üretici onayı bekleniyor'],['İzleme','Tek sipariş kimliği']]
+  },
+  {
+    hero:'Üretici siparişi onayladı',state:'STOK + HAZIRLIK TEYİT',code:'TT-DEMO-001',icon:'🌱',step:'ADIM 02',status:'ÜRETİCİ ONAYI',
+    title:'Üretici stok ve hazırlık durumunu teyit eder.',
+    text:'Sipariş gerçek üretim kaynağıyla bağlanır; hazırlık bilgisi operasyon katmanına aktarılır.',
+    data:[['Üretici','Yerel üretici hesabı'],['Kontrol','Stok + hazırlık'],['Durum','Sipariş kabul edildi'],['Sonraki adım','Görev ve rota planı']]
+  },
+  {
+    hero:'YZ görev ve rota planlıyor',state:'PLAN OLUŞTURULDU',code:'TT-DEMO-001',icon:'✦',step:'ADIM 03',status:'YZ KARAR KATMANI',
+    title:'YZ motoru siparişi fiziksel operasyona dönüştürür.',
+    text:'Toplama noktası, teslimat hedefi ve uygun operasyon sırası tek görev planında birleştirilir.',
+    data:[['Girdi','Sipariş + üretici + konum'],['Karar','Görev sırası'],['Optimizasyon','Toplama / teslimat rotası'],['Çıktı','Operasyon görevi']]
+  },
+  {
+    hero:'Ürün sahada hareket ediyor',state:'CANLI TAKİP',code:'TT-DEMO-001',icon:'🚚',step:'ADIM 04',status:'LOJİSTİK OPERASYONU',
+    title:'Toplama ve teslimat görevi canlı duruma geçer.',
+    text:'Operasyon uygun araçla yürütülür; saha koşullarının uygun olduğu pilot senaryolarda drone görevi de planın bir parçası olabilir.',
+    data:[['Görev','Toplama + teslimat'],['Operasyon','Araç / uygun sahada drone'],['Takip','Canlı durum'],['Hedef','Teslimat noktası']]
+  },
+  {
+    hero:'Teslimat tamamlandı',state:'AKIŞ KAPANDI',code:'TT-DEMO-001',icon:'🏠',step:'ADIM 05',status:'TESLİM + ÖDEME',
+    title:'Ürün sofraya ulaşır, teslimat doğrulanır.',
+    text:'Teslim doğrulamasıyla sipariş zinciri kapanır; ödeme ve izlenebilirlik kaydı aynı sipariş kimliği altında tamamlanır.',
+    data:[['Teslimat','Doğrulandı'],['İzlenebilirlik','Sipariş zinciri kapandı'],['Ödeme','Güvenli kapanış'],['Sonuç','Tarladan sofraya tek kayıt']]
+  }
 ];
-const grid=document.querySelector('#productGrid');
-function render(cat='Tümü'){
- const list=cat==='Tümü'?products:products.filter(p=>p.cat===cat);
- grid.innerHTML=list.map(p=>`<article class="product"><span class="emoji">${p.emoji}</span><span class="tag">${p.cat}</span><h3>${p.name}</h3><p>${p.producer}<br>${p.place}</p><div class="product-foot"><div><strong>${p.price}</strong><br><span>${p.stock}</span></div><button class="btn btn-small" onclick="alert('${p.name} için demo talep oluşturuldu.')">Talep oluştur</button></div></article>`).join('');
+
+let flowTimer=null;
+
+const heroStatus=document.querySelector('#heroStatus');
+const consoleTitle=document.querySelector('#consoleTitle');
+const consoleText=document.querySelector('#consoleText');
+const consoleCode=document.querySelector('#consoleCode');
+const consoleState=document.querySelector('#consoleState');
+const detailStep=document.querySelector('#detailStep');
+const detailStatus=document.querySelector('#detailStatus');
+const detailIcon=document.querySelector('#detailIcon');
+const detailTitle=document.querySelector('#detailTitle');
+const detailText=document.querySelector('#detailText');
+const detailData=document.querySelector('#detailData');
+
+function showStage(index){
+  const s=stages[index];
+  heroStatus.textContent=s.hero;
+  consoleTitle.textContent=s.title;
+  consoleText.textContent=s.text;
+  consoleCode.textContent=s.code;
+  consoleState.textContent=s.state;
+  detailStep.textContent=s.step;
+  detailStatus.textContent=s.status;
+  detailIcon.textContent=s.icon;
+  detailTitle.textContent=s.title;
+  detailText.textContent=s.text;
+  detailData.innerHTML=s.data.map(([k,v])=>`<div><span>${k}</span><b>${v}</b></div>`).join('');
+
+  document.querySelectorAll('.flow-step').forEach((el,i)=>el.classList.toggle('active',i===index));
+  document.querySelectorAll('[data-stage-node]').forEach((el,i)=>{
+    el.classList.toggle('active',i===index);
+    el.classList.toggle('done',i<index);
+  });
+  document.querySelectorAll('.journey-line').forEach((el,i)=>el.classList.toggle('done',i<index));
 }
-render();
-document.querySelectorAll('[data-filter]').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('[data-filter]').forEach(x=>x.classList.remove('active'));btn.classList.add('active');render(btn.dataset.filter)}));
-const modal=document.querySelector('#demoModal');
-document.querySelectorAll('[data-open-panel]').forEach(b=>b.addEventListener('click',()=>{modal.classList.add('open');modal.setAttribute('aria-hidden','false')}));
-document.querySelector('[data-close-panel]').addEventListener('click',()=>{modal.classList.remove('open');modal.setAttribute('aria-hidden','true')});
-modal.addEventListener('click',e=>{if(e.target===modal)modal.classList.remove('open')});
-document.querySelector('#traceButton').addEventListener('click',()=>{const code=document.querySelector('#traceInput').value.trim().toUpperCase();const box=document.querySelector('#traceResult');if(code==='TT-2026-001'){box.innerHTML='<span class="tag">TT-2026-001</span><h3>Domates • 1. kalite</h3><ul><li><b>Üretici:</b> Bereket Çiftliği</li><li><b>Hasat:</b> 17 Ağustos 2026</li><li><b>Konum:</b> Kahramanmaraş</li><li><b>Durum:</b> Sevkiyata hazır</li></ul>'}else{box.innerHTML='<span class="tag">Sonuç</span><h3>Lot bulunamadı</h3><p class="muted">Demo için <b>TT-2026-001</b> kodunu kullanın.</p>'}});
+
+function startFlow(){
+  if(flowTimer) clearInterval(flowTimer);
+  let index=0;
+  showStage(index);
+  flowTimer=setInterval(()=>{
+    index+=1;
+    if(index>=stages.length){
+      clearInterval(flowTimer);
+      flowTimer=null;
+      return;
+    }
+    showStage(index);
+  },1500);
+  document.querySelector('#akis').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+document.querySelectorAll('[data-start-flow]').forEach(btn=>btn.addEventListener('click',startFlow));
+document.querySelectorAll('.flow-step').forEach(btn=>btn.addEventListener('click',()=>{
+  if(flowTimer){clearInterval(flowTimer);flowTimer=null;}
+  showStage(Number(btn.dataset.stage));
+}));
+
+showStage(0);
