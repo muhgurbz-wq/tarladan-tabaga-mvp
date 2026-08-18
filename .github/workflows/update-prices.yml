@@ -7,6 +7,8 @@ on:
   push:
     paths:
       - "scripts/update_prices.py"
+      - "scripts/apply_pricing_policy.py"
+      - "data/pricing-policy.json"
       - ".github/workflows/update-prices.yml"
 
 permissions:
@@ -34,6 +36,9 @@ jobs:
 
       - name: Fetch HKS and TOBB prices
         run: python scripts/update_prices.py
+
+      - name: Apply AI pricing policy metadata
+        run: python scripts/apply_pricing_policy.py
 
       - name: Commit changed price snapshot
         run: |
