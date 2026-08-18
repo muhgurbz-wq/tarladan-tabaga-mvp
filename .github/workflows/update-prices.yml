@@ -29,8 +29,8 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install parser dependencies
-        run: python -m pip install --disable-pip-version-check requests pandas lxml
+      - name: Install updater dependency
+        run: python -m pip install --disable-pip-version-check requests
 
       - name: Fetch HKS and TOBB prices
         run: python scripts/update_prices.py
