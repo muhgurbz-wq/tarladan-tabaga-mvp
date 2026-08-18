@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="description" content="Tarladan Tabağa — siparişi üretici, yapay zekâ destekli görev/rota motoru, lojistik, canlı takip ve güvenli ödeme ile tek akışta birleştiren tarım-gıda lojistiği MVP'si." />
-  <title>Tarladan Tabağa | Tarladan sofraya tek akış</title>
+  <meta name="description" content="Tarladan Tabağa — çiftçiyi vatandaşa doğrudan bağlayan, siparişten foto onaya, drone teslimattan güvenli ödemeye kadar uzanan MVP." />
+  <title>Tarladan Tabağa | Çiftçiden vatandaşa doğrudan</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -12,172 +12,147 @@
 </head>
 <body>
   <header class="topbar">
-    <a class="brand" href="#top" aria-label="Tarladan Tabağa ana sayfa">
-      <span class="brand-mark">TT</span>
-      <span class="brand-text">Tarladan <b>Tabağa</b></span>
-    </a>
+    <a class="brand" href="#top"><span class="mark">TT</span><span>Tarladan <b>Tabağa</b></span></a>
     <nav>
-      <a href="#neden">Neden?</a>
+      <a href="#sorun">Sorun</a>
+      <a href="#urunler">Ürünler</a>
       <a href="#akis">Canlı akış</a>
-      <a href="#mimari">Sistem</a>
-      <a href="#pilot">Pilot</a>
-      <a class="nav-cta" href="#akis">MVP'yi gör</a>
+      <a href="#merkez">Merkez</a>
     </nav>
   </header>
 
   <main id="top">
     <section class="hero">
-      <div class="hero-copy">
-        <div class="pilot-badge"><i></i> Kahramanmaraş pilot senaryosu • Erken aşama MVP</div>
-        <h1>Bir sipariş, <span>tarladan sofraya</span> kadar tek akışta.</h1>
-        <p class="hero-lead">Tarladan Tabağa; tüketicinin siparişini üretici onayı, yapay zekâ destekli görev ve rota planlama, lojistik operasyonu, canlı takip ve güvenli ödeme ile aynı dijital zincirde birleştirir.</p>
+      <div>
+        <span class="kicker">ÜRETİCİ VE VATANDAŞ ODAKLI MVP</span>
+        <h1>Çiftçi emeğinin karşılığını alsın, vatandaş aynı ürünü daha taze ve daha uygun alsın.</h1>
+        <p class="lead">Tarladan Tabağa; kayıtlı çiftçilerin ürünlerini konum ve fiyatıyla vatandaşa gösteren, siparişi aynı anda çiftçi telefonuna ve yapay zekâ destekli drone operasyon merkezine düşüren, foto onaylı ve güvenli ödemeli doğrudan tedarik modelidir.</p>
         <div class="hero-actions">
-          <button class="btn primary" data-start-flow>Canlı akışı başlat</button>
-          <a class="btn secondary" href="#mimari">Sistemi incele</a>
+          <a class="btn primary" href="#urunler">Çiftçi ürünlerini gör</a>
+          <button class="btn secondary" data-start-flow>Canlı akışı başlat</button>
         </div>
-        <div class="purpose-grid">
-          <div><b>Üretici</b><span>Daha doğrudan talep ve daha güçlü gelir modeli</span></div>
-          <div><b>Tüketici</b><span>Daha taze ürüne kaynağını bilerek erişim</span></div>
-          <div><b>Sistem</b><span>Daha kısa rota, daha az kayıp, daha görünür süreç</span></div>
+        <div class="mini-cards">
+          <div><b>Çiftçi kazanır</b><span>Düşük fiyata mecbur kalmaz.</span></div>
+          <div><b>Vatandaş kazanır</b><span>Daha taze ve daha uygun alır.</span></div>
+          <div><b>Aracı azalır</b><span>Zincir kısalır, şeffaflık artar.</span></div>
         </div>
       </div>
-
-      <div class="hero-visual" aria-label="Tarladan sofraya dijital akış görselleştirmesi">
-        <div class="scene-glow"></div>
-        <div class="scene-title"><span>CANLI MVP AKIŞI</span><b id="heroStatus">Sipariş bekleniyor</b></div>
-        <div class="journey-map">
-          <div class="journey-node active" data-stage-node="0"><span class="icon">📱</span><b>Sipariş</b><small>Tüketici</small></div>
-          <div class="journey-line"><i></i></div>
-          <div class="journey-node" data-stage-node="1"><span class="icon">🌱</span><b>Üretici</b><small>Onay</small></div>
-          <div class="journey-line"><i></i></div>
-          <div class="journey-node" data-stage-node="2"><span class="icon">✦</span><b>YZ Motoru</b><small>Görev + rota</small></div>
-          <div class="journey-line"><i></i></div>
-          <div class="journey-node" data-stage-node="3"><span class="icon">🚚</span><b>Operasyon</b><small>Toplama + teslimat</small></div>
-          <div class="journey-line"><i></i></div>
-          <div class="journey-node" data-stage-node="4"><span class="icon">🏠</span><b>Sofra</b><small>Teslim + ödeme</small></div>
+      <div class="hero-panel">
+        <span>CANLI ÖZET</span>
+        <h3 id="heroStatus">Sipariş hazır</h3>
+        <div class="route">
+          <div class="node active" data-route="0">📱<small>Sipariş</small></div>
+          <div class="line"></div>
+          <div class="node" data-route="1">🌿<small>Çiftçi</small></div>
+          <div class="line"></div>
+          <div class="node" data-route="2">✦<small>Merkez</small></div>
+          <div class="line"></div>
+          <div class="node" data-route="3">📸<small>Onay</small></div>
+          <div class="line"></div>
+          <div class="node" data-route="4">🚁<small>Drone</small></div>
+          <div class="line"></div>
+          <div class="node" data-route="5">🏠<small>Teslim</small></div>
         </div>
-        <div class="scene-console">
-          <span>AKIŞ DURUMU</span>
-          <strong id="consoleTitle">Tüketici siparişini oluşturur</strong>
-          <p id="consoleText">Ürün, miktar ve teslimat noktası tek sipariş kaydında başlatılır.</p>
-          <div class="console-meta"><span id="consoleCode">TT-DEMO-001</span><b id="consoleState">HAZIR</b></div>
-        </div>
-        <div class="scene-note">Bu ekran gerçek satış verisi değil, ürünün uçtan uca çalışma mantığını gösteren etkileşimli MVP senaryosudur.</div>
+        <p id="heroText">Sipariş oluştuğunda süreç aynı anda çiftçiye ve operasyon merkezine düşer.</p>
       </div>
     </section>
 
-    <section class="trust-strip">
-      <span>TOPRAK</span><i>→</i><span>ÜRETİCİ</span><i>→</i><span>AKILLI EŞLEŞTİRME</span><i>→</i><span>LOJİSTİK</span><i>→</i><span>SOFRA</span>
-    </section>
-
-    <section class="section why" id="neden">
-      <div class="section-kicker">PROJENİN ÖZÜ</div>
-      <div class="why-grid">
-        <div class="why-title">
-          <h2>Teknoloji amaç değil; <span>güven, adalet ve verimlilik</span> için araç.</h2>
-          <p>Tarladan Tabağa'nın merkezinde ürün kataloğu değil, üretici ile tüketici arasındaki kopuk zinciri yeniden kuran operasyon modeli vardır.</p>
-        </div>
-        <div class="problem-solution">
-          <article class="ps-card problem">
-            <span>BUGÜNKÜ KIRILMA</span>
-            <ul>
-              <li>Üretici gerçek talebi geç görür.</li>
-              <li>Ürün kaynağı ve süreç tüketici için görünmezleşir.</li>
-              <li>Dağınık toplama ve teslimat adımları zaman ve ürün kaybı yaratır.</li>
-              <li>Yerel üretim dijital talep ve lojistikle yeterince bağlanamaz.</li>
-            </ul>
-          </article>
-          <article class="ps-card solution">
-            <span>TARLADAN TABAĞA KATMANI</span>
-            <ul>
-              <li>Sipariş doğrudan üretici onayına akar.</li>
-              <li>YZ motoru görevi ve teslimat rotasını planlar.</li>
-              <li>Toplama, taşıma ve canlı durum tek akıştan izlenir.</li>
-              <li>Teslimat tamamlanınca güvenli ödeme akışı kapanır.</li>
-            </ul>
-          </article>
-        </div>
+    <section class="section light" id="sorun">
+      <span class="kicker">PROJENİN DERDİ</span>
+      <h2>Bugün çiftçi ucuza satıyor, vatandaş pahalıya alıyor.</h2>
+      <div class="problem-grid">
+        <article>
+          <h3>Mevcut sorun</h3>
+          <ul>
+            <li>Komisyoncu / halci / toptancı zinciri fiyatı büyütüyor.</li>
+            <li>Çiftçi ürün çürümesin diye düşük fiyata vermek zorunda kalıyor.</li>
+            <li>Vatandaş aynı ürünü markette daha pahalı ve daha az taze alıyor.</li>
+          </ul>
+        </article>
+        <article class="dark-card">
+          <h3>Tarladan Tabağa çözümü</h3>
+          <ul>
+            <li>Uygulamada çiftçi ürünü, tarla konumu ve fiyatı görünür.</li>
+            <li>Sipariş anında çiftçinin telefonuna bildirim gider.</li>
+            <li>YZ merkezi drone/lojistik görevini oluşturur.</li>
+            <li>Foto onay, güvenli ödeme ve teslim zinciri aynı sistemde yürür.</li>
+          </ul>
+        </article>
       </div>
     </section>
 
-    <section class="section flow-section" id="akis">
-      <div class="section-head">
+    <section class="section" id="urunler">
+      <div class="head-row">
         <div>
-          <div class="section-kicker">ETKİLEŞİMLİ MVP</div>
-          <h2>Siparişin yolculuğunu çalıştır.</h2>
-          <p>Bu demo bir e-ticaret vitrini değil; sistemin siparişi nasıl fiziksel teslime dönüştürdüğünü gösterir.</p>
+          <span class="kicker">VATANDAŞIN GÖRECEĞİ ÜRÜNLER</span>
+          <h2>Çiftçi ürünleri, konumları ve fiyat karşılaştırması</h2>
+          <p>Referans piyasa fiyatı ile doğrudan çiftçi fiyatı yan yana gösterilir.</p>
         </div>
-        <button class="btn primary" data-start-flow>Akışı yeniden başlat</button>
+        <div class="note-box">Demo gösterim: sonraki aşamada Türkiye referans fiyatları düzenli veriyle güncellenecek.</div>
+      </div>
+      <div class="products" id="productGrid"></div>
+    </section>
+
+    <section class="section" id="akis">
+      <div class="head-row">
+        <div>
+          <span class="kicker">VİDEOLU / CANLI AKIŞ DEMOSU</span>
+          <h2>Siparişten teslimata kadar tüm süreç</h2>
+        </div>
+        <button class="btn primary" data-start-flow>Akışı oynat</button>
       </div>
 
-      <div class="flow-shell">
-        <div class="flow-steps" id="flowSteps">
-          <button class="flow-step active" data-stage="0"><span>01</span><div><b>Tüketici siparişi</b><small>Ürün + miktar + teslimat noktası</small></div></button>
-          <button class="flow-step" data-stage="1"><span>02</span><div><b>Üretici onayı</b><small>Stok ve hazırlık teyidi</small></div></button>
-          <button class="flow-step" data-stage="2"><span>03</span><div><b>YZ görev/rota motoru</b><small>Toplama ve teslimat planı</small></div></button>
-          <button class="flow-step" data-stage="3"><span>04</span><div><b>Lojistik operasyonu</b><small>Araç / uygun sahada drone opsiyonu</small></div></button>
-          <button class="flow-step" data-stage="4"><span>05</span><div><b>Teslimat + ödeme</b><small>Canlı durum kapanışı</small></div></button>
+      <div class="flow-wrap">
+        <div class="flow-steps">
+          <button class="step active" data-stage="0">1. Sipariş oluştu</button>
+          <button class="step" data-stage="1">2. Çiftçi bildirimi</button>
+          <button class="step" data-stage="2">3. YZ operasyon planı</button>
+          <button class="step" data-stage="3">4. Bahçeden toplama</button>
+          <button class="step" data-stage="4">5. Fotoğraf ve onay</button>
+          <button class="step" data-stage="5">6. Paket ve görev tamamlama</button>
+          <button class="step" data-stage="6">7. Drone kalkışı + ödeme</button>
+          <button class="step" data-stage="7">8. Teslimat ve dönüş</button>
         </div>
-        <div class="flow-detail">
-          <div class="flow-detail-top"><span id="detailStep">ADIM 01</span><b id="detailStatus">SİPARİŞ OLUŞTU</b></div>
-          <div class="flow-icon" id="detailIcon">📱</div>
-          <h3 id="detailTitle">Vatandaş mobil uygulamadan sipariş verir.</h3>
-          <p id="detailText">Seçilen ürün, miktar ve teslimat noktası tek talep kaydında üretici eşleştirmesine hazır hale gelir.</p>
-          <div class="data-grid" id="detailData">
-            <div><span>Talep</span><b>Yerel ürün siparişi</b></div>
-            <div><span>Kaynak</span><b>Kahramanmaraş üreticisi</b></div>
-            <div><span>Durum</span><b>Üretici onayı bekleniyor</b></div>
-            <div><span>İzleme</span><b>Tek sipariş kimliği</b></div>
+
+        <div class="flow-main">
+          <div class="detail-card">
+            <div class="detail-top"><span id="detailStep">ADIM 01</span><b id="detailStatus">SİPARİŞ OLUŞTU</b></div>
+            <div class="icon-box" id="detailIcon">📱</div>
+            <h3 id="detailTitle">Vatandaş ürün seçer.</h3>
+            <p id="detailText">Ürün, kilogram ve teslim istasyonu seçildiğinde sipariş oluşur.</p>
+            <div class="detail-grid" id="detailGrid"></div>
+          </div>
+
+          <div class="live-card">
+            <div class="live-head"><span id="liveCode">TT-SIP-001</span><b id="liveProduct">Bahçe Domatesi</b></div>
+            <div class="status-list">
+              <article><span>Vatandaş</span><strong id="consumerStatus">Sipariş oluşturuldu</strong><small id="consumerHint">Ödeme güvenli hesapta tutulur.</small></article>
+              <article><span>Çiftçi telefonu</span><strong id="farmerStatus">Bildirim bekleniyor</strong><small id="farmerHint">Sipariş bilgisi burada görünür.</small></article>
+              <article><span>YZ operasyon merkezi</span><strong id="centerStatus">Planlama başlıyor</strong><small id="centerHint">Rota ve görev hesaplanır.</small></article>
+              <article><span>Drone / lojistik</span><strong id="droneStatus">Atama bekleniyor</strong><small id="droneHint">İniş alanı ve rota burada izlenir.</small></article>
+              <article><span>Ödeme</span><strong id="paymentStatus">Beklemede</strong><small id="paymentHint">Kalkış anına kadar korunur.</small></article>
+              <article><span>Foto onay</span><strong id="approvalStatus">Henüz yok</strong><small id="approvalHint">Çiftçi ürün fotoğraflarını gönderecek.</small></article>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="section architecture" id="mimari">
-      <div class="section-kicker">TEK PLATFORM • TEK OPERASYON ZİNCİRİ</div>
-      <h2>Mobil siparişten fiziksel teslimata kadar aynı veri akışı.</h2>
-      <div class="architecture-grid">
-        <article><span class="arch-no">01</span><div class="arch-icon">📱</div><h3>Talep katmanı</h3><p>Tüketici siparişi, konum ve teslimat tercihi.</p></article>
-        <article><span class="arch-no">02</span><div class="arch-icon">🌾</div><h3>Üretici katmanı</h3><p>Stok, hazırlık, hasat ve sipariş onayı.</p></article>
-        <article class="featured"><span class="arch-no">03</span><div class="arch-icon">✦</div><h3>YZ karar katmanı</h3><p>Talep eşleştirme, görev üretme ve rota optimizasyonu.</p></article>
-        <article><span class="arch-no">04</span><div class="arch-icon">🚚</div><h3>Operasyon katmanı</h3><p>Toplama, araç/drone görevi ve canlı durum takibi.</p></article>
-        <article><span class="arch-no">05</span><div class="arch-icon">✓</div><h3>Güven katmanı</h3><p>Teslim doğrulama, izlenebilirlik ve ödeme kapanışı.</p></article>
+    <section class="section light" id="merkez">
+      <span class="kicker">OPERASYON MERKEZİ</span>
+      <h2>Merkez siparişi sadece kaydetmez, fiziksel göreve dönüştürür.</h2>
+      <div class="metrics">
+        <article><span>Kayıtlı çiftçi</span><strong>12</strong><small>Pilot senaryo</small></article>
+        <article><span>Aktif ürün</span><strong>38</strong><small>Demo katalog</small></article>
+        <article><span>Tüketici tasarruf potansiyeli</span><strong>%35</strong><small>Örnek sepet etkisi</small></article>
+        <article><span>Drone görev durumu</span><strong>Hazır</strong><small>İniş alanı tanımlı</small></article>
       </div>
-    </section>
-
-    <section class="section pilot" id="pilot">
-      <div class="pilot-copy">
-        <div class="section-kicker">Kahramanmaraş SAHA PİLOTU</div>
-        <h2>Önce ölç, sonra ölçekle.</h2>
-        <p>İlk hedef büyük rakamlar göstermek değil; gerçek üretici ve gerçek siparişle sistemin nerede değer ürettiğini ölçülebilir biçimde doğrulamaktır.</p>
-        <div class="pilot-route">
-          <span>Yerel üretici</span><i>→</i><span>Talep eşleştirme</span><i>→</i><span>Akıllı rota</span><i>→</i><span>Yerel teslimat</span>
-        </div>
-      </div>
-      <div class="measure-card">
-        <span>PİLOTTA ÖLÇÜLECEK</span>
-        <ul>
-          <li><b>Üretici onay süresi</b><small>Siparişin üretici tarafından kabul edilme hızı</small></li>
-          <li><b>Toplama ve teslimat süresi</b><small>Tarladan teslim noktasına gerçek operasyon zamanı</small></li>
-          <li><b>Gıda kaybı</b><small>Toplama ve dağıtım sürecindeki ürün kaybı</small></li>
-          <li><b>Üretici net geliri</b><small>Modelin üretici tarafındaki ekonomik etkisi</small></li>
-          <li><b>Tüketici toplam maliyeti</b><small>Ürün + teslimat dahil gerçek sepet karşılaştırması</small></li>
-        </ul>
-      </div>
-    </section>
-
-    <section class="section investor">
-      <div>
-        <div class="section-kicker">YATIRIMCI / PİLOT ORTAĞI İÇİN</div>
-        <h2>Hedef: doğrulanabilir MVP → saha pilotu → ölçeklenebilir yerel teslimat altyapısı.</h2>
-      </div>
-      <a class="btn primary" href="#akis">Çalışan akışı göster</a>
     </section>
   </main>
 
   <footer>
-    <a class="brand" href="#top"><span class="brand-mark">TT</span><span class="brand-text">Tarladan <b>Tabağa</b></span></a>
-    <p>Üreticiyi merkeze alan, veriye dayalı tarım-gıda lojistiği MVP'si.</p>
+    <a class="brand" href="#top"><span class="mark">TT</span><span>Tarladan <b>Tabağa</b></span></a>
+    <p>Çiftçinin ve vatandaşın yanında duran doğrudan dijital tarım-gıda lojistiği MVP'si.</p>
   </footer>
 
   <script src="app.js"></script>
