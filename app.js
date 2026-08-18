@@ -4,7 +4,7 @@ const products=[
   {name:'Elma',farmer:'Yayla Bahçesi',location:'Niğde / Bor',station:'Kuzey teslim istasyonu',farmerPrice:'27 ₺/kg',marketPrice:'43 ₺/kg',stock:'250 kg hazır stok',fresh:'Yakın teslim',cat:'Meyve',emoji:'🍎'},
   {name:'Doğal Bal',farmer:'Dağ Arıcılığı',location:'Kahramanmaraş / Andırın',station:'Merkez teslim istasyonu',farmerPrice:'290 ₺/kg',marketPrice:'390 ₺/kg',stock:'42 kg hazır stok',fresh:'Doğrudan üreticiden',cat:'Doğal Ürün',emoji:'🍯'}
 ];
-let current=0, timer=null;
+let current=0,timer=null;
 const productGrid=document.querySelector('#productGrid');
 const heroStatus=document.querySelector('#heroStatus');
 const heroText=document.querySelector('#heroText');
@@ -52,7 +52,7 @@ function stages(){
 function updateRoute(idx){document.querySelectorAll('[data-route]').forEach((n,i)=>{n.classList.toggle('active',i===idx);n.classList.toggle('done',i<idx);});}
 
 function showStage(i){
-  const s=stages()[i], p=products[current];
+  const s=stages()[i],p=products[current];
   heroStatus.textContent=s.hero;
   heroText.textContent=s.heroText;
   updateRoute(s.route);
@@ -64,24 +64,46 @@ function showStage(i){
   detailGrid.innerHTML=s.grid.map(([k,v])=>`<div><span>${k}</span><b>${v}</b></div>`).join('');
   liveCode.textContent=`TT-SIP-00${current+1}`;
   liveProduct.textContent=p.name;
-  consumerStatus.textContent=s.consumer[0]; consumerHint.textContent=s.consumer[1];
-  farmerStatus.textContent=s.farmer[0]; farmerHint.textContent=s.farmer[1];
-  centerStatus.textContent=s.center[0]; centerHint.textContent=s.center[1];
-  droneStatus.textContent=s.drone[0]; droneHint.textContent=s.drone[1];
-  paymentStatus.textContent=s.payment[0]; paymentHint.textContent=s.payment[1];
-  approvalStatus.textContent=s.approval[0]; approvalHint.textContent=s.approval[1];
+  consumerStatus.textContent=s.consumer[0];consumerHint.textContent=s.consumer[1];
+  farmerStatus.textContent=s.farmer[0];farmerHint.textContent=s.farmer[1];
+  centerStatus.textContent=s.center[0];centerHint.textContent=s.center[1];
+  droneStatus.textContent=s.drone[0];droneHint.textContent=s.drone[1];
+  paymentStatus.textContent=s.payment[0];paymentHint.textContent=s.payment[1];
+  approvalStatus.textContent=s.approval[0];approvalHint.textContent=s.approval[1];
   document.querySelectorAll('.step').forEach((b,idx)=>b.classList.toggle('active',idx===i));
 }
 
 function startFlow(){
-  if(timer) clearInterval(timer);
-  let i=0; showStage(i); document.querySelector('#akis').scrollIntoView({behavior:'smooth'});
-  timer=setInterval(()=>{i+=1; if(i>=stages().length){clearInterval(timer); timer=null; return;} showStage(i);},1800);
+  if(timer)clearInterval(timer);
+  let i=0;showStage(i);document.querySelector('#akis').scrollIntoView({behavior:'smooth'});
+  timer=setInterval(()=>{i+=1;if(i>=stages().length){clearInterval(timer);timer=null;return;}showStage(i);},1800);
 }
 
-function selectProduct(i,autoplay){current=i; renderProducts(); showStage(0); if(autoplay) startFlow();}
+function selectProduct(i,autoplay){current=i;renderProducts();showStage(0);if(autoplay)startFlow();}
+
+function setupMediaTabs(){
+  const tabs=document.querySelectorAll('.media-tab');
+  const views=document.querySelectorAll('.media-view');
+  tabs.forEach(tab=>tab.addEventListener('click',()=>{
+    tabs.forEach(t=>t.classList.toggle('active',t===tab));
+    const key=tab.dataset.media;
+    views.forEach(view=>view.classList.toggle('active',view.dataset.view===key));
+  }));
+}
+
+function setupSceneTabs(){
+  const tabs=document.querySelectorAll('.live-scene-tab');
+  const panels=document.querySelectorAll('.scene-panel');
+  tabs.forEach(tab=>tab.addEventListener('click',()=>{
+    tabs.forEach(t=>t.classList.toggle('active',t===tab));
+    const key=tab.dataset.scene;
+    panels.forEach(panel=>panel.classList.toggle('active',panel.dataset.scenePanel===key));
+  }));
+}
 
 document.querySelectorAll('[data-start-flow]').forEach(b=>b.addEventListener('click',startFlow));
-document.querySelectorAll('.step').forEach(b=>b.addEventListener('click',()=>{if(timer){clearInterval(timer); timer=null;} showStage(Number(b.dataset.stage));}));
+document.querySelectorAll('.step').forEach(b=>b.addEventListener('click',()=>{if(timer){clearInterval(timer);timer=null;}showStage(Number(b.dataset.stage));}));
 renderProducts();
+setupMediaTabs();
+setupSceneTabs();
 showStage(0);
