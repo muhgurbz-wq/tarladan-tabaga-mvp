@@ -1,8 +1,9 @@
 const products=[
-  {name:'Bahçe Domatesi',farmer:'Bereket Çiftliği',location:'Kahramanmaraş / Dulkadiroğlu',station:'Merkez teslim istasyonu',farmerPrice:'24 ₺/kg',marketPrice:'40 ₺/kg',stock:'320 kg hazır stok',fresh:'Aynı gün hasat',cat:'Sebze',emoji:'🍅'},
-  {name:'Kapya Biber',farmer:'Güneş Tarım',location:'Gaziantep / Oğuzeli',station:'Batı teslim istasyonu',farmerPrice:'31 ₺/kg',marketPrice:'49 ₺/kg',stock:'180 kg hazır stok',fresh:'Dalından toplama',cat:'Sebze',emoji:'🌶️'},
-  {name:'Elma',farmer:'Yayla Bahçesi',location:'Niğde / Bor',station:'Kuzey teslim istasyonu',farmerPrice:'27 ₺/kg',marketPrice:'43 ₺/kg',stock:'250 kg hazır stok',fresh:'Yakın teslim',cat:'Meyve',emoji:'🍎'},
-  {name:'Doğal Bal',farmer:'Dağ Arıcılığı',location:'Kahramanmaraş / Andırın',station:'Merkez teslim istasyonu',farmerPrice:'290 ₺/kg',marketPrice:'390 ₺/kg',stock:'42 kg hazır stok',fresh:'Doğrudan üreticiden',cat:'Doğal Ürün',emoji:'🍯'}
+  {key:'domates',name:'Bahçe Domatesi',farmer:'Bereket Çiftliği',location:'Kahramanmaraş / Dulkadiroğlu',station:'Merkez teslim istasyonu',farmerAsk:14.50,marketPrice:null,fairPrice:null,stock:'320 kg hazır stok',fresh:'Aynı gün hasat',cat:'Sebze',emoji:'🍅'},
+  {key:'kapya_biber',name:'Kapya Biber',farmer:'Güneş Tarım',location:'Gaziantep / Oğuzeli',station:'Batı teslim istasyonu',farmerAsk:17.50,marketPrice:null,fairPrice:null,stock:'180 kg hazır stok',fresh:'Dalından toplama',cat:'Sebze',emoji:'🌶️'},
+  {key:'elma',name:'Elma',farmer:'Yayla Bahçesi',location:'Niğde / Bor',station:'Kuzey teslim istasyonu',farmerAsk:19.50,marketPrice:null,fairPrice:null,stock:'250 kg hazır stok',fresh:'Yakın teslim',cat:'Meyve',emoji:'🍎'},
+  {key:'ceviz',name:'Ceviz',farmer:'Anadolu Bahçesi',location:'Malatya / Akçadağ',station:'Doğu teslim istasyonu',farmerAsk:240,marketPrice:null,fairPrice:null,stock:'75 kg hazır stok',fresh:'Yeni sezon',cat:'Doğal Ürün',emoji:'🌰'},
+  {key:'bal',name:'Doğal Bal',farmer:'Dağ Arıcılığı',location:'Kahramanmaraş / Andırın',station:'Merkez teslim istasyonu',farmerAsk:290,marketPrice:null,fairPrice:null,stock:'42 kg hazır stok',fresh:'Doğrudan üreticiden',cat:'Doğal Ürün',emoji:'🍯'}
 ];
 let current=0,timer=null;
 const productGrid=document.querySelector('#productGrid');
@@ -29,10 +30,63 @@ const paymentHint=document.querySelector('#paymentHint');
 const approvalStatus=document.querySelector('#approvalStatus');
 const approvalHint=document.querySelector('#approvalHint');
 
+function installPriceUi(){
+  let status=document.querySelector('#priceFeedStatus');
+  if(!status){
+    status=[...document.querySelectorAll('.note-box')].find(el=>el.closest('#urunler'))||null;
+    if(status) status.id='priceFeedStatus';
+  }
+  if(status) status.innerHTML='<b>Resmi fiyat akışı:</b> yükleniyor…<br><small>Ticaret Bakanlığı HKS + TOBB ticaret borsaları.</small>';
+  const style=document.createElement('style');
+  style.textContent='.price-source{margin-top:12px;padding:11px 12px;border-radius:12px;background:rgba(95,176,255,.07);border:1px solid rgba(95,176,255,.18);display:flex;justify-content:space-between;gap:10px;align-items:center}.price-source span{font-size:10px;color:#8fb4ce}.price-source b{font-size:11px;color:#dff0fb}.fair-price{margin-top:12px;padding:14px;border-radius:14px;background:linear-gradient(135deg,rgba(56,210,122,.14),rgba(95,176,255,.08));border:1px solid rgba(56,210,122,.28)}.fair-price span{display:block;font-size:10px;letter-spacing:.08em;color:#8ff0ae;font-weight:800}.fair-price strong{display:block;font-size:24px;margin-top:7px}.fair-price small{display:block;color:#9db3c3;margin-top:6px;line-height:1.45}.feed-ok{color:#8ff0ae}.feed-warn{color:#f1c75c}';
+  document.head.appendChild(style);
+  document.querySelectorAll('.clip-card p').forEach(el=>el.textContent='Canlı resmi fiyat akışındaki güncel referansla birlikte izlenir.');
+}
+
+function money(v){return Number.isFinite(v)?`${v.toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2})} ₺/kg`:'Veri bekleniyor';}
+function computeFairPrice(p){
+  if(!Number.isFinite(p.farmerAsk)||!Number.isFinite(p.marketPrice)) return null;
+  const spread=p.marketPrice-p.farmerAsk;
+  if(spread<=0) return null;
+  return Math.round((p.farmerAsk+spread*0.40)*100)/100;
+}
 function renderProducts(){
-  productGrid.innerHTML=products.map((p,i)=>`<article class="product ${i===current?'selected':''}"><div class="top"><div class="emoji">${p.emoji}</div><span class="tag">${p.cat}</span></div><h3>${p.name}</h3><p>${p.farmer}<br>${p.location}</p><div class="prices"><div><span>Çiftçi fiyatı</span><strong>${p.farmerPrice}</strong></div><div><span>Referans fiyat</span><strong>${p.marketPrice}</strong></div></div><div class="meta"><div><span>Stok</span><b>${p.stock}</b></div><div><span>Tazelik</span><b>${p.fresh}</b></div></div><div class="actions"><button class="btn primary" data-order="${i}">Sipariş senaryosu</button><button class="btn ghost" data-select="${i}">Seç</button></div></article>`).join('');
+  productGrid.innerHTML=products.map((p,i)=>{
+    const fair=computeFairPrice(p);
+    p.fairPrice=fair;
+    const sourceLabel=p.sourceName||'Resmi veri bekleniyor';
+    const sourceDate=p.sourceDate||'—';
+    const fairText=fair?money(fair):'Fiyat doğrulaması gerekli';
+    const fairNote=fair?'Çiftçi teklifinin üstünde; resmi referansın orta noktasının altında.':'Çiftçi teklifi resmi referansın altında değil veya resmi veri henüz yok.';
+    return `<article class="product ${i===current?'selected':''}"><div class="top"><div class="emoji">${p.emoji}</div><span class="tag">${p.cat}</span></div><h3>${p.name}</h3><p>${p.farmer}<br>${p.location}</p><div class="prices"><div><span>Çiftçi teklifi</span><strong>${money(p.farmerAsk)}</strong></div><div><span>Resmi referans</span><strong>${money(p.marketPrice)}</strong></div></div><div class="fair-price"><span>TARLADAN TABAĞA ÖNERİ FİYATI</span><strong>${fairText}</strong><small>${fairNote}</small></div><div class="price-source"><span>${sourceLabel}</span><b>${sourceDate}</b></div><div class="meta"><div><span>Stok</span><b>${p.stock}</b></div><div><span>Tazelik</span><b>${p.fresh}</b></div></div><div class="actions"><button class="btn primary" data-order="${i}">Sipariş senaryosu</button><button class="btn ghost" data-select="${i}">Seç</button></div></article>`;
+  }).join('');
   document.querySelectorAll('[data-select]').forEach(b=>b.addEventListener('click',()=>selectProduct(Number(b.dataset.select),false)));
   document.querySelectorAll('[data-order]').forEach(b=>b.addEventListener('click',()=>selectProduct(Number(b.dataset.order),true)));
+}
+
+async function loadOfficialPrices(){
+  const status=document.querySelector('#priceFeedStatus');
+  try{
+    const res=await fetch(`data/prices.json?v=${Date.now()}`,{cache:'no-store'});
+    if(!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data=await res.json();
+    products.forEach(p=>{
+      const live=data.products?.[p.key];
+      if(!live) return;
+      const avg=Number(live.official_avg);
+      if(Number.isFinite(avg)) p.marketPrice=avg;
+      p.sourceName=live.source_name||live.source||'Resmi kaynak';
+      p.sourceDate=live.data_date||data.generated_at?.slice(0,10)||'—';
+    });
+    if(status){
+      const hks=data.sources?.hks?.ok?'HKS ✓':'HKS bekleniyor';
+      const tobb=data.sources?.tobb?.ok?'TOBB ✓':'TOBB bekleniyor';
+      status.innerHTML=`<b class="feed-ok">Resmi fiyat akışı bağlı:</b> ${hks} • ${tobb}<br><small>Son veri üretimi: ${data.generated_at||'—'}</small>`;
+    }
+  }catch(err){
+    if(status) status.innerHTML=`<b class="feed-warn">Resmi fiyat akışı geçici olarak alınamadı.</b><br><small>Son kayıtlı veriler kullanılacak.</small>`;
+  }
+  renderProducts();
 }
 
 function stages(){
@@ -50,60 +104,17 @@ function stages(){
 }
 
 function updateRoute(idx){document.querySelectorAll('[data-route]').forEach((n,i)=>{n.classList.toggle('active',i===idx);n.classList.toggle('done',i<idx);});}
-
-function showStage(i){
-  const s=stages()[i],p=products[current];
-  heroStatus.textContent=s.hero;
-  heroText.textContent=s.heroText;
-  updateRoute(s.route);
-  detailStep.textContent=s.step;
-  detailStatus.textContent=s.status;
-  detailIcon.textContent=s.icon;
-  detailTitle.textContent=s.title;
-  detailText.textContent=s.text;
-  detailGrid.innerHTML=s.grid.map(([k,v])=>`<div><span>${k}</span><b>${v}</b></div>`).join('');
-  liveCode.textContent=`TT-SIP-00${current+1}`;
-  liveProduct.textContent=p.name;
-  consumerStatus.textContent=s.consumer[0];consumerHint.textContent=s.consumer[1];
-  farmerStatus.textContent=s.farmer[0];farmerHint.textContent=s.farmer[1];
-  centerStatus.textContent=s.center[0];centerHint.textContent=s.center[1];
-  droneStatus.textContent=s.drone[0];droneHint.textContent=s.drone[1];
-  paymentStatus.textContent=s.payment[0];paymentHint.textContent=s.payment[1];
-  approvalStatus.textContent=s.approval[0];approvalHint.textContent=s.approval[1];
-  document.querySelectorAll('.step').forEach((b,idx)=>b.classList.toggle('active',idx===i));
-}
-
-function startFlow(){
-  if(timer)clearInterval(timer);
-  let i=0;showStage(i);document.querySelector('#akis').scrollIntoView({behavior:'smooth'});
-  timer=setInterval(()=>{i+=1;if(i>=stages().length){clearInterval(timer);timer=null;return;}showStage(i);},1800);
-}
-
+function showStage(i){const s=stages()[i],p=products[current];heroStatus.textContent=s.hero;heroText.textContent=s.heroText;updateRoute(s.route);detailStep.textContent=s.step;detailStatus.textContent=s.status;detailIcon.textContent=s.icon;detailTitle.textContent=s.title;detailText.textContent=s.text;detailGrid.innerHTML=s.grid.map(([k,v])=>`<div><span>${k}</span><b>${v}</b></div>`).join('');liveCode.textContent=`TT-SIP-00${current+1}`;liveProduct.textContent=p.name;consumerStatus.textContent=s.consumer[0];consumerHint.textContent=s.consumer[1];farmerStatus.textContent=s.farmer[0];farmerHint.textContent=s.farmer[1];centerStatus.textContent=s.center[0];centerHint.textContent=s.center[1];droneStatus.textContent=s.drone[0];droneHint.textContent=s.drone[1];paymentStatus.textContent=s.payment[0];paymentHint.textContent=s.payment[1];approvalStatus.textContent=s.approval[0];approvalHint.textContent=s.approval[1];document.querySelectorAll('.step').forEach((b,idx)=>b.classList.toggle('active',idx===i));}
+function startFlow(){if(timer)clearInterval(timer);let i=0;showStage(i);document.querySelector('#akis').scrollIntoView({behavior:'smooth'});timer=setInterval(()=>{i+=1;if(i>=stages().length){clearInterval(timer);timer=null;return;}showStage(i);},1800);}
 function selectProduct(i,autoplay){current=i;renderProducts();showStage(0);if(autoplay)startFlow();}
-
-function setupMediaTabs(){
-  const tabs=document.querySelectorAll('.media-tab');
-  const views=document.querySelectorAll('.media-view');
-  tabs.forEach(tab=>tab.addEventListener('click',()=>{
-    tabs.forEach(t=>t.classList.toggle('active',t===tab));
-    const key=tab.dataset.media;
-    views.forEach(view=>view.classList.toggle('active',view.dataset.view===key));
-  }));
-}
-
-function setupSceneTabs(){
-  const tabs=document.querySelectorAll('.live-scene-tab');
-  const panels=document.querySelectorAll('.scene-panel');
-  tabs.forEach(tab=>tab.addEventListener('click',()=>{
-    tabs.forEach(t=>t.classList.toggle('active',t===tab));
-    const key=tab.dataset.scene;
-    panels.forEach(panel=>panel.classList.toggle('active',panel.dataset.scenePanel===key));
-  }));
-}
+function setupMediaTabs(){const tabs=document.querySelectorAll('.media-tab');const views=document.querySelectorAll('.media-view');tabs.forEach(tab=>tab.addEventListener('click',()=>{tabs.forEach(t=>t.classList.toggle('active',t===tab));const key=tab.dataset.media;views.forEach(view=>view.classList.toggle('active',view.dataset.view===key));}));}
+function setupSceneTabs(){const tabs=document.querySelectorAll('.live-scene-tab');const panels=document.querySelectorAll('.scene-panel');tabs.forEach(tab=>tab.addEventListener('click',()=>{tabs.forEach(t=>t.classList.toggle('active',t===tab));const key=tab.dataset.scene;panels.forEach(panel=>panel.classList.toggle('active',panel.dataset.scenePanel===key));}));}
 
 document.querySelectorAll('[data-start-flow]').forEach(b=>b.addEventListener('click',startFlow));
 document.querySelectorAll('.step').forEach(b=>b.addEventListener('click',()=>{if(timer){clearInterval(timer);timer=null;}showStage(Number(b.dataset.stage));}));
+installPriceUi();
 renderProducts();
 setupMediaTabs();
 setupSceneTabs();
 showStage(0);
+loadOfficialPrices();
