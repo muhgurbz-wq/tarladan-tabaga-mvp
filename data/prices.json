@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-08-18T03:50:57Z",
+  "generated_at": "2026-08-18T07:07:32Z",
   "pricing_rule": {
     "name": "Tarladan Tabağa YZ Fiyat Politikası",
     "farmer_sets_price": false,
     "pricing_owner": "AI_OPERATION_CENTER",
-    "platform_rate": 0.20,
+    "platform_rate": 0.2,
     "farmer_uplift_rate": 0.05,
-    "consumer_discount_target": 0.10,
+    "consumer_discount_target": 0.1,
     "farmer_payout_formula": "official_agriculture_reference * 1.05",
     "consumer_final_price_formula": "farmer_payout / 0.80",
     "operation_share_formula": "consumer_final_price * 0.20",
