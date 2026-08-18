@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-08-18T03:39:00Z",
+  "pricing_rule": {
+    "name": "Tarladan Tabağa Adil Fiyat",
+    "formula": "farmerAsk + 0.40 * (officialReference - farmerAsk)",
+    "condition": "Sadece farmerAsk < officialReference ise öneri üretilir.",
+    "note": "Bu formül çiftçi teklifinin üstünde, çiftçi teklifi ile resmi referansın orta noktasının altında fiyat üretir. Lojistik ve platform maliyetleri pilotta ayrıca doğrulanmalıdır."
+  },
+  "sources": {
+    "hks": {
+      "ok": true,
+      "name": "T.C. Ticaret Bakanlığı Hal Kayıt Sistemi",
+      "url": "https://www.hal.gov.tr/Sayfalar/FiyatDetaylari.aspx",
+      "note": "Sebze ve meyve için resmi hal ortalama fiyat referansı."
+    },
+    "tobb": {
+      "ok": true,
+      "name": "TOBB Ticaret Borsaları Ürün Fiyat Bilgileri",
+      "url": "https://borsa.tobb.org.tr/",
+      "note": "Ticaret borsalarının resmi ürün fiyat verileri; kaynak gösterilerek kullanılabilir."
+    }
+  },
+  "products": {
+    "domates": {"official_avg": 18.87,"unit": "kg","source": "hks","source_name": "Ticaret Bakanlığı HKS","source_product": "DOMATES / DİĞER","data_date": null},
+    "kapya_biber": {"official_avg": 22.45,"unit": "kg","source": "hks","source_name": "Ticaret Bakanlığı HKS","source_product": "BİBER SALÇALIK (KAPYA)","data_date": null},
+    "elma": {"official_avg": 24.64,"unit": "kg","source": "hks","source_name": "Ticaret Bakanlığı HKS","source_product": "ELMA / DİĞER","data_date": null},
+    "ceviz": {"official_avg": 280.0,"unit": "kg","source": "tobb","source_name": "TOBB / Gaziantep Ticaret Borsası","source_product": "CEVİZ KABUKLU","data_date": "2026-07-07"},
+    "bal": {"official_avg": null,"unit": "kg","source": null,"source_name": "Uygun resmi canlı kaynak aranıyor","source_product": "BAL","data_date": null}
+  }
+}
