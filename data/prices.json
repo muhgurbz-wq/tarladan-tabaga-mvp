@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-08-18T03:48:51Z",
+  "generated_at": "2026-08-18T03:50:57Z",
   "pricing_rule": {
     "name": "Tarladan Tabağa Adil Fiyat",
     "formula": "farmerAsk + 0.40 * (officialReference - farmerAsk)",
@@ -15,10 +15,10 @@
       "data_date": "2026-08-18"
     },
     "tobb": {
-      "ok": false,
+      "ok": true,
       "name": "TOBB Ticaret Borsaları Ürün Fiyat Bilgileri",
       "url": "https://borsa.tobb.org.tr/",
-      "error": ""
+      "data_date": "2026-07-07"
     }
   },
   "products": {
@@ -47,7 +47,7 @@
       "data_date": "2026-08-18"
     },
     "ceviz": {
-      "official_avg": 280000.0,
+      "official_avg": 280.0,
       "unit": "kg",
       "source": "tobb",
       "source_name": "TOBB Ticaret Borsaları",
