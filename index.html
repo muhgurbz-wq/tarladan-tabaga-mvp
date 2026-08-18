@@ -15,25 +15,123 @@
 <body>
   <div class="app-shell">
     <header class="app-header">
-      <div class="brand"><span class="brand-mark">TT</span><div><b>Tarladan <em>Tabağa</em></b><small id="priceFeedStatus">Resmi fiyat akışı yükleniyor…</small></div></div>
+      <div class="brand">
+        <span class="brand-mark">TT</span>
+        <div><b>Tarladan <em>Tabağa</em></b><small id="priceFeedStatus">Resmi fiyat akışı yükleniyor…</small></div>
+      </div>
       <div class="header-live"><i></i><span id="systemStatus">Sistem hazır</span></div>
     </header>
+
     <main class="view-stack">
       <section class="app-view active" data-view="market">
-        <div class="view-head"><div><span class="eyebrow">DOĞRUDAN ÜRETİCİDEN</span><h1>Ürünü seç, sepete ekle</h1></div><button class="icon-btn" id="refreshPrices" aria-label="Fiyatları yenile">↻</button></div>
-        <div class="category-tabs" id="categoryTabs"><button class="chip active" data-category="all">Tümü</button><button class="chip" data-category="Sebze">Sebze</button><button class="chip" data-category="Meyve">Meyve</button><button class="chip" data-category="Tahıl">Tahıl</button><button class="chip" data-category="Bakliyat">Bakliyat</button><button class="chip" data-category="Doğal Ürün">Doğal</button></div>
+        <article class="market-hero">
+          <div class="market-hero-copy">
+            <span class="eyebrow">TARLADAN • DOĞRUDAN • İZLENEBİLİR</span>
+            <h1>Bugünün taze ürünleri, tek ekranda.</h1>
+            <p>Ürünü seç, kaynağını ve YZ fiyatını gör, sepete ekle; sonra güvenli ödeme ve canlı teslimat akışına geç.</p>
+            <div class="hero-badges"><span>HKS / TOBB fiyat motoru</span><span>Üreticiye doğrudan ödeme</span><span>Drone canlı takip</span></div>
+          </div>
+          <div class="hero-orbit" aria-hidden="true"><div class="orb orb-a">🍅</div><div class="orb orb-b">🍎</div><div class="orb orb-c">🌾</div><div class="orb orb-d">🚁</div><strong>TT</strong></div>
+        </article>
+
+        <div class="view-head compact-head">
+          <div><span class="eyebrow">PAZAR</span><h2>Ürünü seç, sepete ekle</h2></div>
+          <button class="icon-btn" id="refreshPrices" aria-label="Fiyatları yenile">↻</button>
+        </div>
+
+        <div class="category-tabs" id="categoryTabs">
+          <button class="chip active" data-category="all">Tümü</button>
+          <button class="chip" data-category="Sebze">Sebze</button>
+          <button class="chip" data-category="Meyve">Meyve</button>
+          <button class="chip" data-category="Tahıl">Tahıl</button>
+          <button class="chip" data-category="Bakliyat">Bakliyat</button>
+          <button class="chip" data-category="Doğal Ürün">Doğal</button>
+        </div>
+
         <div class="picker-head"><span>ÜRÜN ÇEŞİTLERİ</span><b id="pickerCount">0 ürün</b></div>
         <div class="product-picker" id="productPicker"></div>
-        <article class="product-detail" id="productDetail"><div class="product-photo" id="detailPhoto"><div class="photo-overlay"><span id="detailLiveBadge">ÜRÜN GÖRÜNÜMÜ</span><b id="detailFarm">—</b></div></div><div class="detail-body"><div class="detail-title-row"><div><h2 id="detailName">Ürün</h2><p id="detailLocation">—</p></div><div class="price-block"><small>YZ SATIŞ FİYATI</small><strong id="detailPrice">—</strong></div></div><div class="detail-meta"><span><b id="detailPayout">—</b><small>Üreticiye doğrudan</small></span><span><b id="detailSource">—</b><small>Fiyat kaynağı</small></span><span><b id="detailFresh">—</b><small>Tazelik</small></span></div><div class="order-bar"><div class="qty"><button id="qtyMinus">−</button><b id="qtyValue">5 kg</b><button id="qtyPlus">+</button></div><button class="primary-btn" id="addCart">Sepete ekle</button></div></div></article>
+
+        <article class="product-detail" id="productDetail">
+          <div class="product-photo" id="detailPhoto"><img id="detailVisual" alt="Seçili ürün görseli"><div class="photo-overlay"><span>ÜRÜN GÖRÜNÜMÜ</span><b id="detailFarm">—</b></div></div>
+          <div class="detail-body">
+            <div class="detail-title-row"><div><h2 id="detailName">Ürün</h2><p id="detailLocation">—</p></div><div class="price-block"><small>YZ SATIŞ FİYATI</small><strong id="detailPrice">—</strong></div></div>
+            <div class="detail-meta"><span><b id="detailPayout">—</b><small>Üreticiye doğrudan</small></span><span><b id="detailSource">—</b><small>Fiyat kaynağı</small></span><span><b id="detailFresh">—</b><small>Tazelik</small></span></div>
+            <div class="order-bar"><div class="qty"><button id="qtyMinus">−</button><b id="qtyValue">5 kg</b><button id="qtyPlus">+</button></div><button class="primary-btn" id="addCart">Sepete ekle</button></div>
+          </div>
+        </article>
       </section>
+
       <section class="app-view" data-view="cart">
-        <div class="view-head"><div><span class="eyebrow">SEPET + GÜVENLİ ÖDEME</span><h1>Sepetin</h1></div><span class="order-code" id="cartCountTop">0 ürün</span></div><div class="cart-list" id="cartList"></div><article class="checkout-card"><div class="checkout-total"><span>Toplam</span><strong id="cartTotal">0,00 ₺</strong></div><div class="secure-box"><div class="secure-icon">⌾</div><div><b>Güvenli ödeme</b><small>Ödeme sipariş oluşturulurken güvenli bekleme kaydına alınır; üretici hakedişi drone kalkışı doğrulanınca serbest bırakılır.</small></div></div><div class="payment-state" id="paymentState"><span>ÖDEME DURUMU</span><b>Henüz oluşturulmadı</b><small>Bu MVP gerçek kart bilgisi toplamaz; gerçek ödeme kuruluşu entegrasyonu bağlanana kadar güvenli ödeme akışı pilot kaydı olarak çalışır.</small></div><button class="primary-btn wide" id="createPayment">Güvenli ödeme oluştur</button><button class="secondary-btn wide" id="startPaidOrder" disabled>Siparişi başlat</button></article>
+        <div class="view-head"><div><span class="eyebrow">SEPET + GÜVENLİ ÖDEME</span><h1>Sepetin</h1></div><span class="order-code" id="cartCountTop">0 ürün</span></div>
+        <div class="cart-list" id="cartList"></div>
+        <article class="checkout-card">
+          <div class="checkout-total"><span>Toplam</span><strong id="cartTotal">0,00 ₺</strong></div>
+          <div class="secure-box"><div class="secure-icon">⌾</div><div><b>Güvenli ödeme</b><small>Ödeme sipariş oluşturulurken güvenli bekleme kaydına alınır; üretici hakedişi drone kalkışı doğrulanınca serbest bırakılır.</small></div></div>
+          <div class="payment-state" id="paymentState"><span>ÖDEME DURUMU</span><b>Henüz oluşturulmadı</b><small>Bu MVP gerçek kart bilgisi toplamaz; gerçek ödeme kuruluşu entegrasyonu bağlanana kadar güvenli ödeme pilot kaydı olarak çalışır.</small></div>
+          <button class="primary-btn wide" id="createPayment">Güvenli ödeme oluştur</button>
+          <button class="secondary-btn wide" id="startPaidOrder" disabled>Siparişi başlat</button>
+        </article>
       </section>
-      <section class="app-view" data-view="order"><div class="view-head"><div><span class="eyebrow">SİPARİŞ AKIŞI</span><h1 id="orderTitle">Henüz sipariş yok</h1></div><span class="order-code" id="orderCode">—</span></div><div class="order-overview"><div class="order-product-mini"><div class="mini-thumb" id="orderThumb"></div><div><b id="orderProduct">Ürün seçilmedi</b><small id="orderSummary">Sepetten güvenli ödeme oluşturup siparişi başlatın.</small></div></div><div class="progress-track"><i id="orderProgress"></i></div><div class="stage-grid" id="stageGrid"></div></div><div class="order-now"><div class="now-icon" id="nowIcon">◉</div><div><span>ŞU AN</span><h3 id="nowTitle">Sipariş bekleniyor</h3><p id="nowText">Ödeme kaydı oluşturulduktan sonra bütün süreç burada canlı ilerler.</p></div></div><button class="secondary-btn wide" id="openLiveFromOrder">Canlı takibe geç</button></section>
-      <section class="app-view" data-view="live"><div class="view-head compact"><div><span class="eyebrow">CANLI TAKİP</span><h1>Drone rota + kamera</h1></div><div class="live-pill"><i></i><span id="liveModeLabel">Pilot simülasyon</span></div></div><div class="live-tabs"><button class="active" data-live-pane="map">Rota</button><button data-live-pane="camera">Drone kamerası</button></div><div class="live-pane active" data-live-content="map"><div class="map-wrap"><div id="routeMap"></div><div class="map-hud top-left"><span>DRONE</span><b id="mapDroneId">TT-D01</b></div><div class="map-hud top-right"><span>ETA</span><b id="mapEta">—</b></div></div><div class="telemetry-row"><div><span>İrtifa</span><b id="altitude">0 m</b></div><div><span>Hız</span><b id="speed">0 km/sa</b></div><div><span>Batarya</span><b id="battery">100%</b></div><div><span>Mesafe</span><b id="distance">—</b></div></div><div class="live-status"><span id="routeStatusDot"></span><div><b id="routeStatusTitle">Rota bekleniyor</b><small id="routeStatusText">Sipariş verildiğinde operasyon merkezi rotayı burada gösterecek.</small></div></div></div><div class="live-pane" data-live-content="camera"><div class="camera-shell" id="cameraShell"><video id="droneVideo" playsinline muted autoplay loop></video><div class="camera-fallback" id="cameraFallback"></div><div class="camera-scan"></div><div class="cam-top"><span><i></i> DRONE CAM</span><b id="camTime">00:00:00</b></div><div class="crosshair"></div><div class="cam-bottom"><span>ALT <b id="camAlt">0 m</b></span><span>SPD <b id="camSpeed">0 km/sa</b></span><span>GPS <b id="camGps">—</b></span></div></div><div class="camera-caption"><b id="cameraTitle">Kamera bağlantısı hazır</b><small id="cameraText">Gerçek drone video URL'si tanımlandığında bu alan doğrudan canlı yayına geçer; şu an pilot saha görünümü kullanılıyor.</small></div></div></section>
-      <section class="app-view" data-view="project"><div class="view-head"><div><span class="eyebrow">PROJE TANITIMI + MERKEZ</span><h1>Büyük resmi gör</h1></div><span class="ops-badge">TT CORE</span></div><div class="project-tabs"><button class="active" data-project-pane="intro">Proje</button><button data-project-pane="system">Sistem</button><button data-project-pane="ops">Merkez</button></div><div class="project-pane active" data-project-content="intro"><article class="project-hero"><span>PROJENİN RUHU</span><h2>Çiftçi emeğinin karşılığını alsın, vatandaş daha taze ürüne daha uygun erişsin.</h2><p>Tarladan Tabağa; aracı zincirini azaltan, resmi tarım fiyat verisini yapay zekâ fiyat motoruyla işleyen, siparişi çiftçi görevine ve drone lojistiğine dönüştüren, foto onay ve güvenli ödeme akışını tek sistemde birleştiren tarım-gıda platformudur.</p></article><div class="project-grid"><article><b>Problem</b><small>Çiftçi düşük fiyata mecbur kalıyor; vatandaş aynı ürünü pahalı ve daha az taze alıyor.</small></article><article><b>Çözüm</b><small>Doğrudan dijital eşleşme + YZ fiyat + drone görev + canlı takip.</small></article><article><b>Üretici</b><small>Ürünü siparişe göre toplar, fotoğrafla onaylar, kalkış sonrası hakediş alır.</small></article><article><b>Vatandaş</b><small>Ürünü, kaynağı, fiyatı ve teslimat sürecini tek ekrandan izler.</small></article></div></div><div class="project-pane" data-project-content="system"><div class="module-grid"><article><span>01</span><b>Ürün + fiyat motoru</b><small>HKS / TOBB canlı referansı; canlı veri olmayan üründe açıkça pilot referans etiketi.</small></article><article><span>02</span><b>Sepet + güvenli ödeme</b><small>Ödeme kaydı sipariş öncesi oluşturulur; gerçek ödeme kuruluşu bağlanınca üretim akışına geçer.</small></article><article><span>03</span><b>Çiftçi görevi</b><small>Ürün, kg, tarla konumu ve teslim süresi çiftçi telefonuna düşer.</small></article><article><span>04</span><b>Foto onay</b><small>Toplanan ürün vatandaşa gösterilir, onay sonrası paketleme tamamlanır.</small></article><article><span>05</span><b>Drone operasyonu</b><small>İniş alanı, rota, telemetri, kamera ve otonom dönüş tek görevde izlenir.</small></article><article><span>06</span><b>Ödeme mutabakatı</b><small>Drone kalkışı doğrulanınca üretici hakedişi serbest bırakılır.</small></article></div></div><div class="project-pane" data-project-content="ops"><div class="ops-grid"><article><span>Aktif sipariş</span><b id="opsOrderCount">0</b><small id="opsOrderState">Beklemede</small></article><article><span>Drone</span><b id="opsDroneState">Hazır</b><small id="opsDroneDetail">TT-D01 • merkez</small></article><article><span>Fiyat motoru</span><b id="opsPriceState">Bağlı</b><small>HKS / TOBB + pilot referans</small></article><article><span>Üretici ödeme</span><b id="opsPayoutState">Beklemede</b><small>Kalkış doğrulaması sonrası</small></article></div><div class="ops-timeline" id="opsTimeline"></div><div class="ops-note"><span>OTOMASYON</span><p>Fiyat, ödeme, görev, rota ve teslimat aynı sipariş kimliği üzerinden yönetilir. Gerçek ödeme ve drone telemetrisi bağlandığında pilot katmanlar otomatik devreden çıkar.</p></div></div></section>
+
+      <section class="app-view" data-view="order">
+        <div class="view-head"><div><span class="eyebrow">SİPARİŞ AKIŞI</span><h1 id="orderTitle">Henüz sipariş yok</h1></div><span class="order-code" id="orderCode">—</span></div>
+        <div class="order-overview"><div class="order-product-mini"><div class="mini-thumb"><img id="orderThumb" alt="Sipariş ürünü"></div><div><b id="orderProduct">Ürün seçilmedi</b><small id="orderSummary">Sepetten güvenli ödeme oluşturup siparişi başlatın.</small></div></div><div class="progress-track"><i id="orderProgress"></i></div><div class="stage-grid" id="stageGrid"></div></div>
+        <div class="order-now"><div class="now-icon" id="nowIcon">◉</div><div><span>ŞU AN</span><h3 id="nowTitle">Sipariş bekleniyor</h3><p id="nowText">Ödeme kaydı oluşturulduktan sonra bütün süreç burada canlı ilerler.</p></div></div>
+        <button class="secondary-btn wide" id="openLiveFromOrder">Canlı takibe geç</button>
+      </section>
+
+      <section class="app-view" data-view="live">
+        <div class="view-head compact"><div><span class="eyebrow">CANLI TAKİP</span><h1>Drone rota + kamera</h1></div><div class="live-pill"><i></i><span id="liveModeLabel">Pilot simülasyon</span></div></div>
+        <div class="live-tabs"><button class="active" data-live-pane="map">Rota</button><button data-live-pane="camera">Drone kamerası</button></div>
+        <div class="live-pane active" data-live-content="map"><div class="map-wrap"><div id="routeMap"></div><div class="map-hud top-left"><span>DRONE</span><b id="mapDroneId">TT-D01</b></div><div class="map-hud top-right"><span>ETA</span><b id="mapEta">—</b></div></div><div class="telemetry-row"><div><span>İrtifa</span><b id="altitude">0 m</b></div><div><span>Hız</span><b id="speed">0 km/sa</b></div><div><span>Batarya</span><b id="battery">100%</b></div><div><span>Mesafe</span><b id="distance">—</b></div></div><div class="live-status"><span id="routeStatusDot"></span><div><b id="routeStatusTitle">Rota bekleniyor</b><small id="routeStatusText">Sipariş verildiğinde operasyon merkezi rotayı burada gösterecek.</small></div></div></div>
+        <div class="live-pane" data-live-content="camera"><div class="camera-shell"><video id="droneVideo" playsinline muted autoplay loop></video><div class="camera-fallback" id="cameraFallback"><div class="landscape-art"><div class="farmland"></div><div class="road"></div><div class="drone-shadow">✈</div></div></div><div class="camera-scan"></div><div class="cam-top"><span><i></i> DRONE CAM</span><b id="camTime">00:00:00</b></div><div class="crosshair"></div><div class="cam-bottom"><span>ALT <b id="camAlt">0 m</b></span><span>SPD <b id="camSpeed">0 km/sa</b></span><span>GPS <b id="camGps">—</b></span></div></div><div class="camera-caption"><b id="cameraTitle">Kamera bağlantısı hazır</b><small id="cameraText">Gerçek drone video URL'si tanımlandığında bu alan doğrudan canlı yayına geçer; şu an gerçekçi pilot saha görünümü kullanılıyor.</small></div></div>
+      </section>
+
+      <section class="app-view" data-view="project">
+        <div class="view-head"><div><span class="eyebrow">PROJE TANITIMI + MERKEZ</span><h1>Büyük resmi gör</h1></div><span class="ops-badge">TT CORE</span></div>
+        <div class="project-tabs"><button class="active" data-project-pane="intro">Proje</button><button data-project-pane="citizen">Vatandaş</button><button data-project-pane="farmer">Çiftçi</button><button data-project-pane="system">Sistem</button><button data-project-pane="ops">Merkez</button></div>
+
+        <div class="project-pane active" data-project-content="intro">
+          <article class="project-hero"><span>PROJENİN RUHU</span><h2>Çiftçi emeğinin karşılığını alsın, vatandaş daha taze ürüne daha uygun erişsin.</h2><p>Tarladan Tabağa; aracı zincirini azaltan, resmi tarım fiyat verisini yapay zekâ fiyat motoruyla işleyen, siparişi çiftçi görevine ve drone lojistiğine dönüştüren, foto onay ve güvenli ödeme akışını tek sistemde birleştiren tarım-gıda platformudur.</p></article>
+          <div class="role-launchers">
+            <button data-open-role="citizen"><span>VATANDAŞ</span><b>Ürünü seç → onayla → canlı izle</b><small>Ürün, fiyat, sepet, ödeme ve teslimat tek ekranda.</small></button>
+            <button data-open-role="farmer"><span>ÇİFTÇİ</span><b>Siparişi al → hasat et → hakedişi al</b><small>Bildirim, toplama, foto onay ve ödeme süreci.</small></button>
+            <button data-open-role="system"><span>SİSTEM</span><b>YZ fiyat + görev + rota motoru</b><small>Fiyat, sipariş ve operasyon kararları tek çekirdekte.</small></button>
+            <button data-open-role="ops"><span>MERKEZ</span><b>Drone, telemetri ve mutabakat</b><small>Canlı operasyon kontrolü ve teslimat kapanışı.</small></button>
+          </div>
+        </div>
+
+        <div class="project-pane" data-project-content="citizen">
+          <article class="role-hero citizen"><div class="role-icon">👤</div><div><span>VATANDAŞ DENEYİMİ</span><h2>Bir ürünü sadece satın almaz; nereden geldiğini ve nasıl geldiğini görür.</h2></div></article>
+          <div class="role-flow"><article><span>01</span><b>Ürünleri keşfet</b><small>Sebze, meyve, tahıl, bakliyat ve doğal ürünleri üretici ve fiyatıyla görür.</small></article><article><span>02</span><b>Sepete ekle</b><small>Kg miktarını seçer, sepet toplamını ve ürün kaynağını kontrol eder.</small></article><article><span>03</span><b>Güvenli ödeme</b><small>Ödeme sipariş için beklemeye alınır; süreç tamamlanana kadar kontrollüdür.</small></article><article><span>04</span><b>Foto onay</b><small>Çiftçinin topladığı ürünlerin fotoğraflarını görür ve onaylar.</small></article><article><span>05</span><b>Canlı takip</b><small>Drone rota, ETA, hız, batarya ve kamera ekranından teslimatı izler.</small></article><article><span>06</span><b>Teslim al</b><small>Belirlenen istasyondan ürünü teslim alır ve sipariş kapanır.</small></article></div>
+        </div>
+
+        <div class="project-pane" data-project-content="farmer">
+          <article class="role-hero farmer"><div class="role-icon">🧑‍🌾</div><div><span>ÇİFTÇİ DENEYİMİ</span><h2>Ürününü düşük fiyata elden çıkarmak yerine talebe göre toplar ve hakedişini sistemden alır.</h2></div></article>
+          <div class="role-flow"><article><span>01</span><b>Sipariş bildirimi</b><small>Ürün, miktar ve teslimat bilgisi çiftçinin telefonuna düşer.</small></article><article><span>02</span><b>Hasat</b><small>Çiftçi sadece sipariş edilen miktarı bahçeden toplar.</small></article><article><span>03</span><b>Görsel doğrulama</b><small>Toplanan ürünlerin fotoğrafları vatandaşa gönderilir.</small></article><article><span>04</span><b>Paketleme</b><small>Onaylanan ürün güvenli drone paketine yerleştirilir.</small></article><article><span>05</span><b>Drone kalkışı</b><small>Paket kilitlenir ve kalkış doğrulaması operasyon merkezine düşer.</small></article><article><span>06</span><b>Hakediş</b><small>Kalkış doğrulaması sonrası çiftçi ödemesi kayıtlı hesabına serbest bırakılır.</small></article></div>
+        </div>
+
+        <div class="project-pane" data-project-content="system">
+          <article class="role-hero system"><div class="role-icon">✦</div><div><span>TEKNOLOJİ ÇEKİRDEĞİ</span><h2>Bir e-ticaret ekranı değil; fiyat, sipariş, lojistik ve ödeme motorlarının birleştiği operasyon platformu.</h2></div></article>
+          <div class="module-grid"><article><span>01</span><b>YZ Fiyat Motoru</b><small>HKS / TOBB referansını işler, üretici ödemesi ve tüketici satış fiyatını hesaplar.</small></article><article><span>02</span><b>Sipariş Motoru</b><small>Ürün, kg, üretici, teslim noktası ve ödeme kaydını tek sipariş kimliğinde tutar.</small></article><article><span>03</span><b>Çiftçi Görev Motoru</b><small>Siparişi üretici telefonunda yapılacak görevlere dönüştürür.</small></article><article><span>04</span><b>Drone Görev Motoru</b><small>İniş alanı, yük, rota, ETA, telemetri ve dönüş görevini yönetir.</small></article><article><span>05</span><b>Canlı İzleme</b><small>Rota, kamera, GPS, hız, batarya ve operasyon durumunu tek ekranda gösterir.</small></article><article><span>06</span><b>Ödeme Mutabakatı</b><small>Kalkış doğrulamasıyla üretici hakedişini, teslimatla sipariş kapanışını yönetir.</small></article></div>
+        </div>
+
+        <div class="project-pane" data-project-content="ops">
+          <article class="role-hero ops"><div class="role-icon">⌖</div><div><span>OPERASYON MERKEZİ</span><h2>Her siparişi sahadaki fiziksel göreve dönüştüren kontrol katmanı.</h2></div></article>
+          <div class="ops-grid"><article><span>Aktif sipariş</span><b id="opsOrderCount">0</b><small id="opsOrderState">Beklemede</small></article><article><span>Drone</span><b id="opsDroneState">Hazır</b><small id="opsDroneDetail">TT-D01 • merkez</small></article><article><span>Fiyat motoru</span><b id="opsPriceState">Bağlı</b><small>HKS / TOBB + pilot referans</small></article><article><span>Üretici ödeme</span><b id="opsPayoutState">Beklemede</b><small>Kalkış doğrulaması sonrası</small></article></div><div class="ops-timeline" id="opsTimeline"></div><div class="ops-note"><span>OTOMASYON</span><p>Fiyat, ödeme, görev, rota ve teslimat aynı sipariş kimliği üzerinden yönetilir. Gerçek ödeme ve drone telemetrisi bağlandığında pilot katmanlar otomatik devreden çıkar.</p></div>
+        </div>
+      </section>
     </main>
-    <nav class="bottom-nav" aria-label="Ana menü"><button class="active" data-nav="market"><span>⌂</span><b>Pazar</b></button><button data-nav="cart"><span>▤</span><b>Sepet</b><em id="cartCount">0</em></button><button data-nav="order"><span>▣</span><b>Sipariş</b></button><button data-nav="live"><span>⌖</span><b>Canlı</b></button><button data-nav="project"><span>◎</span><b>Proje</b></button></nav>
+
+    <nav class="bottom-nav" aria-label="Ana menü">
+      <button class="active" data-nav="market"><span>⌂</span><b>Pazar</b></button>
+      <button data-nav="cart"><span>▤</span><b>Sepet</b><em id="cartCount">0</em></button>
+      <button data-nav="order"><span>▣</span><b>Sipariş</b></button>
+      <button data-nav="live"><span>⌖</span><b>Canlı</b></button>
+      <button data-nav="project"><span>◎</span><b>Proje</b></button>
+    </nav>
   </div>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script><script src="app.js"></script>
-</body></html>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script src="app.js"></script>
+</body>
+</html>
