@@ -4,23 +4,29 @@
 
 ## Şu anda çalışan web katmanı
 
-- Kayıtlı çiftçi / ürün / tarla konumu görünümü
-- Sebze, meyve ve doğal ürün kategorileri
-- Sipariş → çiftçi bildirimi → YZ operasyon planı → hasat → fotoğraf/onay → paket → drone kalkışı/ödeme → teslimat/dönüş demo akışı
-- Tüketici, çiftçi, operasyon merkezi ve drone kamerası ekran senaryoları
+- Tek-ekran uygulama yapısı: **Pazar / Sepet / Sipariş / Canlı / Proje**
+- Sebze, meyve, tahıl, bakliyat ve doğal ürünlerden oluşan geniş ürün kataloğu
+- Ürün adı ile görseli aynı ürün verisinden üretildiği için kart/detail görsel uyuşmazlığı engellenir
+- Ürün seçimi → kg belirleme → **Sepete ekle** akışı
+- Sepette toplam tutar, ürün miktar düzenleme ve ürün silme
+- **Pilot güvenli ödeme kaydı** → sipariş başlatma akışı
+- Sipariş → çiftçi bildirimi → YZ operasyon planı → hasat → fotoğraf/onay → drone yükleme → kalkış/üretici hakedişi → teslimat/dönüş senaryosu
+- Drone rota haritası, telemetri ve gerçek video/telemetri bağlantısına hazır canlı takip ekranı
+- Proje tanıtımı, sistem modülleri ve operasyon merkezi aynı uygulama içinde
 - Resmi tarım fiyat referanslarını kullanan YZ fiyat merkezi
-- Mobil ve masaüstü uyumlu arayüz
 
-## Resmi fiyat veri katmanı
+## Fiyat kaynakları
 
-`data/prices.json` uygulamanın yayınladığı resmi fiyat anlık görüntüsüdür.
+`data/prices.json` uygulamanın resmi fiyat anlık görüntüsüdür.
 
-`scripts/update_prices.py` şu resmi kaynaklardan veri toplamayı dener:
+`scripts/update_prices.py` şu kaynaklardan veri toplamayı dener:
 
-- **T.C. Ticaret Bakanlığı Hal Kayıt Sistemi (HKS):** sebze/meyve hal fiyat referansları
-- **TOBB Ticaret Borsaları Ürün Fiyat Bilgileri:** ticaret borsalarının ürün fiyatları
+- **T.C. Ticaret Bakanlığı Hal Kayıt Sistemi (HKS)**
+- **TOBB Ticaret Borsaları Ürün Fiyat Bilgileri**
 
-`.github/workflows/update-prices.yml` fiyat güncellemesini **3 saatte bir** çalıştıracak şekilde kuruludur. Kaynakta yeni fiyat oluşmamışsa önceki doğrulanmış kayıt korunur.
+`.github/workflows/update-prices.yml` fiyat güncellemesini **3 saatte bir** çalıştıracak şekilde kuruludur.
+
+Resmi canlı kaynağı henüz eşleşmeyen katalog ürünleri uygulamada açıkça **Pilot referans** etiketiyle gösterilir; resmi veri gibi sunulmaz.
 
 ## YZ fiyat merkezi
 
@@ -28,19 +34,22 @@
 
 Aktif pilot politika `data/pricing-policy.json` dosyasındadır:
 
-- Operasyon payı: **nihai kg fiyatının %20'si**
-- Çiftçi hedef ödemesi: resmi tarım referansının **%5 üzerinde**
-- Nihai tüketici fiyatı: `çiftçi_ödemesi / 0.80`
-- Yetkili bir perakende tüketici referansı bağlandığında sistem, tüketici lehine fiyat hedefini ayrıca kontrol eder.
-- Operasyon payı tüketici ekranında ayrı bir kalem olarak öne çıkarılmaz; muhasebe/operasyon hesabında ayrı tutulur.
+- Operasyon payı: nihai kg fiyatının **%20'si**
+- Resmi canlı veri olan ürünlerde üretici hedef ödemesi: resmi tarım referansının **%5 üzerinde**
+- Nihai tüketici fiyatı: `üretici_ödemesi / 0.80`
+- Operasyon payı tüketici ekranında ayrı bir komisyon satırı olarak gösterilmez
 
-Örnek: resmi tarım referansı 20 TL/kg ise çiftçi hedef ödemesi 21 TL/kg olur; nihai fiyat 26,25 TL/kg, operasyon payı 5,25 TL/kg olur.
+## Güvenli ödeme durumu
 
-**Not:** Buradaki %20, vergi, ödeme kuruluşu kesintisi, drone/enerji, sigorta ve diğer giderler düşülmeden önceki brüt operasyon payıdır; net kâr aynı şey değildir.
+Mevcut web katmanı gerçek kart bilgisi toplamaz. Sepetteki **Güvenli ödeme oluştur** adımı şu anda pilot bekleme kaydı üretir. Gerçek para hareketi için lisanslı ödeme kuruluşu / banka entegrasyonu gereklidir.
 
-## Tüketici lehine fiyat doğrulaması
+Üretim hedefi:
 
-HKS/TOBB değerleri doğrudan Türkiye perakende tüketici ortalaması değildir. Bu nedenle uygulama, yetkili/izinli bir perakende fiyat kaynağı bağlanmadan “market ortalamasından kesin daha ucuz” iddiası üretmez. Perakende referansı geldiğinde YZ motoru, nihai fiyatın hedeflenen tasarruf sınırının altında kalmasını kontrol edecek şekilde hazırdır.
+1. Vatandaş ödemesi güvenli bekleme hesabına alınır.
+2. Sipariş çiftçiye ve operasyon merkezine düşer.
+3. Foto onayı ve drone yükleme tamamlanır.
+4. Drone kalkışı doğrulanınca üretici hakedişi serbest bırakılır.
+5. Platform/operasyon mutabakatı arka planda tamamlanır.
 
 ## Üretim sistemine geçiş için kalan gerçek entegrasyonlar
 
@@ -48,22 +57,22 @@ HKS/TOBB değerleri doğrudan Türkiye perakende tüketici ortalaması değildir
 2. Çiftçinin ürün, stok ve tarla/iniş alanı kaydı
 3. Kalıcı veritabanı ve gerçek sipariş altyapısı
 4. Yetkili perakende tüketici fiyat veri kaynağı / API'si
-5. Ödeme kuruluşu ve bekletilen ödeme / hakediş akışı
+5. Lisanslı ödeme kuruluşu ve bekletilen ödeme / hakediş akışı
 6. Drone operasyon sağlayıcısı, uçuş izinleri, rota ve telemetri API'si
 7. Fotoğraf/video yükleme ve gerçek zamanlı takip altyapısı
 8. KVKK, mesafeli satış, gıda ve operasyon mevzuatı kontrolleri
 
 ## Dosyalar
 
-- `index.html` — tüketici ve operasyon deneyimi
-- `styles.css` — arayüz
-- `app.js` — ürün, YZ fiyat ve sipariş demo motoru
+- `index.html` — tek-ekran tüketici/proje deneyimi
+- `styles-v2.css` — güncel tek-ekran arayüz
+- `styles.css` — önceki arayüz sürümü
+- `app.js` — katalog, sepet, pilot ödeme, YZ fiyat ve sipariş/canlı takip motoru
 - `data/prices.json` — resmi fiyat anlık görüntüsü
-- `data/pricing-policy.json` — YZ fiyat ve operasyon payı politikası
+- `data/pricing-policy.json` — fiyat politikası
 - `scripts/update_prices.py` — HKS/TOBB fiyat güncelleyici
-- `scripts/apply_pricing_policy.py` — fiyat anlık görüntüsüne aktif fiyat politikasını uygular
 - `.github/workflows/update-prices.yml` — otomatik fiyat güncelleme görevi
 
 ---
 
-**Durum:** Resmi fiyat veri katmanı ve YZ fiyat motoru bağlı çalışan MVP. Gerçek satış, ödeme ve drone kontrolü için üretim entegrasyonları henüz tamamlanmamıştır.
+**Durum:** Geniş katalog + sepet + pilot güvenli ödeme + resmi fiyat katmanı + drone canlı takip entegrasyon noktaları bulunan çalışan MVP. Gerçek para tahsilatı ve gerçek drone kontrolü için dış servis entegrasyonları henüz tamamlanmamıştır.
