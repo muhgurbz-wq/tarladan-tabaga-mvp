@@ -1,12 +1,10 @@
 const PRODUCTS=[
-  {key:'domates',name:'Bahçe Domatesi',farmer:'Bereket Çiftliği',location:'Kahramanmaraş / Dulkadiroğlu',station:'Merkez teslim istasyonu',cat:'Sebze',fresh:'Aynı gün hasat',stock:'320 kg',photo:'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=900&q=82',farm:[37.5758,36.9226]},
-  {key:'kapya_biber',name:'Kapya Biber',farmer:'Güneş Tarım',location:'Gaziantep / Oğuzeli',station:'Batı teslim istasyonu',cat:'Sebze',fresh:'Dalından toplama',stock:'180 kg',photo:'https://images.unsplash.com/photo-1563565375-f3fdfdbefa83?auto=format&fit=crop&w=900&q=82',farm:[37.0637,37.3824]},
-  {key:'elma',name:'Elma',farmer:'Yayla Bahçesi',location:'Niğde / Bor',station:'Kuzey teslim istasyonu',cat:'Meyve',fresh:'Yakın teslim',stock:'250 kg',photo:'https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?auto=format&fit=crop&w=900&q=82',farm:[37.8897,34.5587]},
-  {key:'ceviz',name:'Ceviz',farmer:'Anadolu Bahçesi',location:'Malatya / Akçadağ',station:'Doğu teslim istasyonu',cat:'Doğal Ürün',fresh:'Yeni sezon',stock:'75 kg',photo:'https://images.unsplash.com/photo-1600189020840-e9918c25269d?auto=format&fit=crop&w=900&q=82',farm:[38.3456,37.9677]},
-  {key:'bal',name:'Doğal Bal',farmer:'Dağ Arıcılığı',location:'Kahramanmaraş / Andırın',station:'Merkez teslim istasyonu',cat:'Doğal Ürün',fresh:'Doğrudan üreticiden',stock:'42 kg',photo:'https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&w=900&q=82',farm:[37.5761,36.3545]}
+  {key:'domates',name:'Bahçe Domatesi',farmer:'Bereket Çiftliği',location:'Kahramanmaraş / Dulkadiroğlu',station:'Merkez teslim istasyonu',cat:'Sebze',fresh:'Aynı gün hasat',stock:'320 kg',photo:'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=900&q=82',farm:[37.5758,36.9226],center:[37.5854,36.9342],delivery:[37.5888,36.9416]},
+  {key:'kapya_biber',name:'Kapya Biber',farmer:'Güneş Tarım',location:'Gaziantep / Oğuzeli',station:'Batı teslim istasyonu',cat:'Sebze',fresh:'Dalından toplama',stock:'180 kg',photo:'https://images.unsplash.com/photo-1563565375-f3fdfdbefa83?auto=format&fit=crop&w=900&q=82',farm:[37.0637,37.3824],center:[37.0702,37.3890],delivery:[37.0765,37.3950]},
+  {key:'elma',name:'Elma',farmer:'Yayla Bahçesi',location:'Niğde / Bor',station:'Kuzey teslim istasyonu',cat:'Meyve',fresh:'Yakın teslim',stock:'250 kg',photo:'https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?auto=format&fit=crop&w=900&q=82',farm:[37.8897,34.5587],center:[37.8950,34.5660],delivery:[37.9010,34.5740]},
+  {key:'ceviz',name:'Ceviz',farmer:'Anadolu Bahçesi',location:'Malatya / Akçadağ',station:'Doğu teslim istasyonu',cat:'Doğal Ürün',fresh:'Yeni sezon',stock:'75 kg',photo:'https://images.unsplash.com/photo-1600189020840-e9918c25269d?auto=format&fit=crop&w=900&q=82',farm:[38.3456,37.9677],center:[38.3510,37.9750],delivery:[38.3570,37.9830]},
+  {key:'bal',name:'Doğal Bal',farmer:'Dağ Arıcılığı',location:'Kahramanmaraş / Andırın',station:'Merkez teslim istasyonu',cat:'Doğal Ürün',fresh:'Doğrudan üreticiden',stock:'42 kg',photo:'https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&w=900&q=82',farm:[37.5761,36.3545],center:[37.5810,36.3620],delivery:[37.5870,36.3690]}
 ];
-const OPS_CENTER=[37.5854,36.9342];
-const DELIVERY=[37.5888,36.9416];
 const POLICY={platformShare:0.20,farmerUplift:0.05};
 const STAGES=[
   ['Sipariş','Sipariş güvenli hesaba alındı','▣'],
@@ -114,13 +112,13 @@ function addOpsEvent(title,text){
 
 function initMap(){
   if(map){setTimeout(()=>map.invalidateSize(),60);return;}
-  map=L.map('routeMap',{zoomControl:false,attributionControl:true}).setView(OPS_CENTER,13);
+  const p=currentProduct();map=L.map('routeMap',{zoomControl:false,attributionControl:true}).setView(p.center,14);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(map);
-  L.circleMarker(OPS_CENTER,{radius:7,color:'#62b6ff',weight:3,fillColor:'#07131f',fillOpacity:1}).addTo(map).bindTooltip('Operasyon Merkezi');
-  L.circleMarker(DELIVERY,{radius:7,color:'#45dc86',weight:3,fillColor:'#07131f',fillOpacity:1}).addTo(map).bindTooltip('Teslim İstasyonu');
+  L.circleMarker(p.center,{radius:7,color:'#62b6ff',weight:3,fillColor:'#07131f',fillOpacity:1}).addTo(map).bindTooltip('Operasyon Merkezi');
+  L.circleMarker(p.delivery,{radius:7,color:'#45dc86',weight:3,fillColor:'#07131f',fillOpacity:1}).addTo(map).bindTooltip('Teslim İstasyonu');
   setTimeout(()=>map.invalidateSize(),100);
 }
-function routePoints(){const farm=activeOrder?.product?.farm||currentProduct().farm;return [OPS_CENTER,farm,DELIVERY,OPS_CENTER];}
+function routePoints(){const p=activeOrder?.product||currentProduct();return [p.center,p.farm,p.delivery,p.center];}
 function startRouteAnimation(stage){
   initMap();if(!map||!activeOrder)return;
   const pts=routePoints();let segment=stage===4?0:stage<=6?1:2;
@@ -132,8 +130,8 @@ function startRouteAnimation(stage){
 function stopRoute(){clearInterval(routeTimer);routeTimer=null;routeProgress=0;}
 function updateTelemetryValues(lat,lng,segment,progress){
   const alt=segment===0?Math.round(18+progress*32):segment===1?52:Math.round(52-progress*26),spd=segment===1?46:36,batt=Math.max(48,100-Math.round((stageIndex*8)+(progress*5)));
-  $('#altitude').textContent=`${alt} m`;$('#speed').textContent=`${spd} km/s`;$('#battery').textContent=`${batt}%`;$('#distance').textContent=`${(1.8-progress*1.3).toFixed(1)} km`;
-  $('#camAlt').textContent=`${alt} m`;$('#camSpeed').textContent=`${spd} km/s`;$('#camGps').textContent=`${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+  $('#altitude').textContent=`${alt} m`;$('#speed').textContent=`${spd} km/sa`;$('#battery').textContent=`${batt}%`;$('#distance').textContent=`${(1.8-progress*1.3).toFixed(1)} km`;
+  $('#camAlt').textContent=`${alt} m`;$('#camSpeed').textContent=`${spd} km/sa`;$('#camGps').textContent=`${lat.toFixed(4)}, ${lng.toFixed(4)}`;
 }
 function updateLiveTelemetry(i){
   const on=i>=4;$('#routeStatusDot').classList.toggle('on',on);$('#mapEta').textContent=on?`${Math.max(2,10-i)} dk`:'—';
@@ -148,9 +146,33 @@ function setupVideoHook(){
 }
 function updateClock(){$('#camTime').textContent=nowTime();}
 
+function setupTelemetryHook(){
+  const wsUrl=window.DRONE_TELEMETRY_WS;
+  if(!wsUrl)return;
+  try{
+    const ws=new WebSocket(wsUrl);
+    ws.addEventListener('open',()=>{$('#liveModeLabel').textContent='Canlı telemetri';});
+    ws.addEventListener('message',event=>{
+      let d;try{d=JSON.parse(event.data)}catch{return;}
+      if(!Number.isFinite(Number(d.lat))||!Number.isFinite(Number(d.lng)))return;
+      initMap();const lat=Number(d.lat),lng=Number(d.lng);
+      if(!droneMarker){droneMarker=L.marker([lat,lng],{icon:L.divIcon({className:'drone-marker',html:'<div style="width:30px;height:30px;border-radius:50%;background:#07131f;border:2px solid #45dc86;display:grid;place-items:center;box-shadow:0 0 0 6px rgba(69,220,134,.12);font-size:14px">✦</div>',iconSize:[30,30],iconAnchor:[15,15]})}).addTo(map)}
+      droneMarker.setLatLng([lat,lng]);map.panTo([lat,lng],{animate:true,duration:.4});
+      if(Number.isFinite(Number(d.altitude))){$('#altitude').textContent=`${Number(d.altitude).toFixed(0)} m`;$('#camAlt').textContent=`${Number(d.altitude).toFixed(0)} m`;}
+      if(Number.isFinite(Number(d.speed))){$('#speed').textContent=`${Number(d.speed).toFixed(0)} km/sa`;$('#camSpeed').textContent=`${Number(d.speed).toFixed(0)} km/sa`;}
+      if(Number.isFinite(Number(d.battery)))$('#battery').textContent=`${Number(d.battery).toFixed(0)}%`;
+      if(d.eta)$('#mapEta').textContent=String(d.eta);
+      $('#camGps').textContent=`${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+      $('#routeStatusDot').classList.add('on');
+      if(d.status){$('#routeStatusTitle').textContent=String(d.status);$('#systemStatus').textContent=String(d.status);}
+    });
+    ws.addEventListener('close',()=>{$('#liveModeLabel').textContent='Pilot simülasyon';});
+  }catch(e){}
+}
+
 $$('.bottom-nav button').forEach(b=>b.addEventListener('click',()=>setView(b.dataset.nav)));
 $$('.chip').forEach(b=>b.addEventListener('click',()=>{$$('.chip').forEach(x=>x.classList.remove('active'));b.classList.add('active');category=b.dataset.category;renderProducts()}));
 $$('.live-tabs button').forEach(b=>b.addEventListener('click',()=>{$$('.live-tabs button').forEach(x=>x.classList.remove('active'));b.classList.add('active');$$('.live-pane').forEach(x=>x.classList.toggle('active',x.dataset.liveContent===b.dataset.livePane));if(b.dataset.livePane==='map')setTimeout(initMap,60)}));
 $('#qtyMinus').addEventListener('click',()=>{qty=Math.max(1,qty-1);renderDetail()});$('#qtyPlus').addEventListener('click',()=>{qty=Math.min(50,qty+1);renderDetail()});$('#startOrder').addEventListener('click',startOrder);$('#openLiveFromOrder').addEventListener('click',()=>setView('live'));$('#refreshPrices').addEventListener('click',loadPrices);
 
-buildStageGrid();renderProducts();renderDetail();loadPrices();setupVideoHook();setInterval(updateClock,1000);updateClock();addOpsEvent('Sistem','Operasyon merkezi hazır.');
+buildStageGrid();renderProducts();renderDetail();loadPrices();setupVideoHook();setupTelemetryHook();setInterval(updateClock,1000);updateClock();addOpsEvent('Sistem','Operasyon merkezi hazır.');
