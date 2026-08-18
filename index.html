@@ -16,6 +16,7 @@
     <nav>
       <a href="#sorun">Sorun</a>
       <a href="#urunler">Ürünler</a>
+      <a href="#gorsel-akis">Tüketici deneyimi</a>
       <a href="#akis">Canlı akış</a>
       <a href="#merkez">Merkez</a>
     </nav>
@@ -91,6 +92,133 @@
         <div class="note-box">Demo gösterim: sonraki aşamada Türkiye referans fiyatları düzenli veriyle güncellenecek.</div>
       </div>
       <div class="products" id="productGrid"></div>
+    </section>
+
+    <section class="section media-demo" id="gorsel-akis">
+      <div class="head-row media-head">
+        <div>
+          <span class="kicker">TÜKETİCİ DENEYİMİ</span>
+          <h2>Ürünü tarlada gör, başlığa dokun ve canlı akışı izle.</h2>
+          <p>Tüketici uygulamada hem sebze / meyve / doğal ürünleri tarladaki canlı video alanı gibi görür, hem de başlıklara dokunarak sipariş sürecinin farklı ekranlarını açar.</p>
+        </div>
+        <div class="media-tabs" id="mediaTabs">
+          <button class="media-tab active" data-media="sebze">Sebzeler</button>
+          <button class="media-tab" data-media="meyve">Meyveler</button>
+          <button class="media-tab" data-media="dogal">Doğal Ürünler</button>
+          <button class="media-tab" data-media="surec">Canlı Akış</button>
+        </div>
+      </div>
+
+      <div class="media-view active" data-view="sebze">
+        <div class="video-card big">
+          <div class="video-top"><span>CANLI TARLA GÖRÜNÜMÜ</span><b>Bereket Çiftliği • Kahramanmaraş</b></div>
+          <div class="field-stage veg-stage">
+            <div class="field-sun"></div>
+            <div class="field-hill hill-back"></div>
+            <div class="field-hill hill-front"></div>
+            <div class="plant p1">🍅</div>
+            <div class="plant p2">🍅</div>
+            <div class="plant p3">🌶️</div>
+            <div class="drift-label">Tarla üstü ürün görünümü</div>
+          </div>
+          <div class="video-bottom"><span>Domates • Biber • tarladan canlı görünüm</span><small>Vatandaş ürünün bulunduğu ortamı ve hasat alanını görür.</small></div>
+        </div>
+        <div class="clip-grid">
+          <article class="clip-card"><div class="mini-stage veg-mini">🍅</div><h3>Bahçe Domatesi</h3><p>Çiftçi fiyatı 24 ₺/kg • referans fiyat 40 ₺/kg</p></article>
+          <article class="clip-card"><div class="mini-stage pepper-mini">🌶️</div><h3>Kapya Biber</h3><p>Çiftçi fiyatı 31 ₺/kg • referans fiyat 49 ₺/kg</p></article>
+        </div>
+      </div>
+
+      <div class="media-view" data-view="meyve">
+        <div class="video-card big">
+          <div class="video-top"><span>CANLI BAHÇE GÖRÜNÜMÜ</span><b>Yayla Bahçesi • Niğde</b></div>
+          <div class="field-stage fruit-stage">
+            <div class="field-sun"></div>
+            <div class="field-hill hill-back"></div>
+            <div class="field-hill hill-front"></div>
+            <div class="plant p1">🍎</div>
+            <div class="plant p2">🍇</div>
+            <div class="plant p3">🍎</div>
+            <div class="drift-label">Meyve bahçesi görünümü</div>
+          </div>
+          <div class="video-bottom"><span>Elma • Üzüm • canlı bahçe görünümü</span><small>Tüketici meyvelerin yetiştiği alanı uygulama içinde izler.</small></div>
+        </div>
+        <div class="clip-grid">
+          <article class="clip-card"><div class="mini-stage apple-mini">🍎</div><h3>Elma</h3><p>Çiftçi fiyatı 27 ₺/kg • referans fiyat 43 ₺/kg</p></article>
+          <article class="clip-card"><div class="mini-stage grape-mini">🍇</div><h3>Üzüm</h3><p>Çiftçi fiyatı 36 ₺/kg • referans fiyat 58 ₺/kg</p></article>
+        </div>
+      </div>
+
+      <div class="media-view" data-view="dogal">
+        <div class="video-card big">
+          <div class="video-top"><span>CANLI ÜRETİM GÖRÜNÜMÜ</span><b>Dağ Arıcılığı • Andırın</b></div>
+          <div class="field-stage natural-stage">
+            <div class="field-sun"></div>
+            <div class="field-hill hill-back"></div>
+            <div class="field-hill hill-front"></div>
+            <div class="plant p1">🍯</div>
+            <div class="plant p2">🌰</div>
+            <div class="plant p3">🍯</div>
+            <div class="drift-label">Doğal ürün üretim alanı</div>
+          </div>
+          <div class="video-bottom"><span>Bal • Ceviz • üretim alanı görünümü</span><small>Vatandaş doğal ürünlerin üretim sahasını ve kaynağını görür.</small></div>
+        </div>
+        <div class="clip-grid">
+          <article class="clip-card"><div class="mini-stage honey-mini">🍯</div><h3>Doğal Bal</h3><p>Çiftçi fiyatı 290 ₺/kg • referans fiyat 390 ₺/kg</p></article>
+          <article class="clip-card"><div class="mini-stage nut-mini">🌰</div><h3>Ceviz</h3><p>Çiftçi fiyatı 175 ₺/kg • referans fiyat 245 ₺/kg</p></article>
+        </div>
+      </div>
+
+      <div class="media-view" data-view="surec">
+        <div class="head-row sub-flow-head">
+          <div>
+            <span class="kicker">BAŞLIĞA DOKUN • CANLI EKRANI AÇ</span>
+            <h3 class="mini-title">Tüketici, çiftçi, operasyon merkezi ve drone görüntüsü</h3>
+          </div>
+          <div class="live-scene-tabs" id="liveSceneTabs">
+            <button class="live-scene-tab active" data-scene="consumer">Tüketici</button>
+            <button class="live-scene-tab" data-scene="farmer">Çiftçi</button>
+            <button class="live-scene-tab" data-scene="center">Operasyon Merkezi</button>
+            <button class="live-scene-tab" data-scene="drone">Drone Kamerası</button>
+          </div>
+        </div>
+
+        <div class="scene-panel active" data-scene-panel="consumer">
+          <div class="scene-preview consumer-screen">
+            <div class="screen-chip">CANLI EKRAN</div>
+            <h4>Tüketici uygulaması</h4>
+            <p>Ürünler, fiyat karşılaştırması, görsel onay ve teslimat takibi aynı ekranda görünür.</p>
+            <div class="screen-rail"><span class="active">Ürün seçimi</span><span>Foto onay</span><span>Teslimat izleme</span></div>
+          </div>
+        </div>
+
+        <div class="scene-panel" data-scene-panel="farmer">
+          <div class="scene-preview farmer-screen">
+            <div class="screen-chip">ÇİFTÇİ TELEFONU</div>
+            <h4>Yeni sipariş bildirimi</h4>
+            <p>Çiftçi telefonunda ürün adı, miktar, teslim istasyonu ve görev tamamla akışı görünür.</p>
+            <div class="screen-rail"><span class="active">Sipariş düştü</span><span>Fotoğraf yükle</span><span>Görevi tamamla</span></div>
+          </div>
+        </div>
+
+        <div class="scene-panel" data-scene-panel="center">
+          <div class="scene-preview center-screen">
+            <div class="screen-chip">YZ OPERASYON MERKEZİ</div>
+            <h4>Görev, rota ve iniş alanı paneli</h4>
+            <p>Merkez kilogram, çiftçi konumu, teslim istasyonu ve yasal rota bilgisine göre görevi üretir.</p>
+            <div class="screen-rail"><span class="active">Görev üretildi</span><span>Rota planı</span><span>Uçuş izleme</span></div>
+          </div>
+        </div>
+
+        <div class="scene-panel" data-scene-panel="drone">
+          <div class="scene-preview drone-screen">
+            <div class="screen-chip">DRONE KAMERASI</div>
+            <h4>Canlı uçuş görünümü</h4>
+            <p>Vatandaş drone’un çiftçiden aldığı ürünü teslim istasyonuna taşırken kamera görünümünü izler.</p>
+            <div class="screen-rail"><span class="active">Kalkış</span><span>Rota üzerinde</span><span>Teslimat</span></div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <section class="section" id="akis">
