@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="Tarladan Tabağa — üretici ile tüketiciyi doğrudan buluşturan, izlenebilir dijital tarım pazaryeri MVP demosu." />
+  <title>Tarladan Tabağa | MVP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#">Tarladan <span>Tabağa</span></a>
+    <nav>
+      <a href="#urunler">Ürünler</a>
+      <a href="#nasil">Nasıl çalışır?</a>
+      <a href="#izlenebilirlik">İzlenebilirlik</a>
+      <button class="btn btn-small" data-open-panel>Demo Paneli</button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <span class="eyebrow">DİJİTAL TARIM • DOĞRUDAN TEDARİK</span>
+        <h1>Üreticiden tüketiciye <em>daha kısa, daha şeffaf</em> bir yol.</h1>
+        <p>Tarladan Tabağa; yerel üreticiyi tüketici ve işletmelerle buluşturan, ürünün kaynağını görünür kılan dijital pazaryeri ve tedarik zinciri platformudur.</p>
+        <div class="hero-actions">
+          <a class="btn" href="#urunler">Ürünleri keşfet</a>
+          <button class="btn btn-ghost" data-open-panel>Yatırımcı demosu</button>
+        </div>
+        <div class="metrics">
+          <div><strong>12</strong><span>Demo üretici</span></div>
+          <div><strong>38</strong><span>Demo ürün</span></div>
+          <div><strong>%18</strong><span>Örnek aracı maliyeti düşüşü</span></div>
+        </div>
+      </div>
+      <div class="hero-card">
+        <div class="status"><i></i> Canlı demo akışı</div>
+        <h3>Bugünün tedarik özeti</h3>
+        <div class="flow-row"><span>Domates • Kahramanmaraş</span><b>320 kg</b></div>
+        <div class="flow-row"><span>Biber • Gaziantep</span><b>180 kg</b></div>
+        <div class="flow-row"><span>Elma • Niğde</span><b>250 kg</b></div>
+        <div class="route">
+          <span>Üretici</span><i>→</i><span>Toplama</span><i>→</i><span>Teslimat</span>
+        </div>
+        <small>Bu ekran yatırımcı sunumu için örnek veriler kullanır.</small>
+      </div>
+    </section>
+
+    <section class="section" id="urunler">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">PAZARYERİ DEMOSU</span>
+          <h2>Doğrudan üreticiden seç</h2>
+        </div>
+        <div class="filters" id="filters">
+          <button class="active" data-filter="Tümü">Tümü</button>
+          <button data-filter="Sebze">Sebze</button>
+          <button data-filter="Meyve">Meyve</button>
+          <button data-filter="Doğal Ürün">Doğal Ürün</button>
+        </div>
+      </div>
+      <div class="product-grid" id="productGrid"></div>
+    </section>
+
+    <section class="section split" id="nasil">
+      <div>
+        <span class="eyebrow">NASIL ÇALIŞIR?</span>
+        <h2>Tek platformda 4 adım</h2>
+        <p class="muted">Amaç; üretici görünürlüğünü artırırken alıcıya fiyat, konum ve ürün kaynağını tek ekranda sunmak.</p>
+      </div>
+      <ol class="steps">
+        <li><b>01</b><div><strong>Üretici ürününü listeler</strong><span>Ürün, miktar, hasat tarihi ve konum eklenir.</span></div></li>
+        <li><b>02</b><div><strong>Alıcı talep oluşturur</strong><span>Tüketici veya işletme ihtiyacını seçer.</span></div></li>
+        <li><b>03</b><div><strong>Eşleştirme yapılır</strong><span>Konum ve stok bilgisine göre en uygun tedarik seçilir.</span></div></li>
+        <li><b>04</b><div><strong>Ürün izlenir</strong><span>Tedarik hareketleri tek kayıt üzerinden görünür.</span></div></li>
+      </ol>
+    </section>
+
+    <section class="section trace" id="izlenebilirlik">
+      <div>
+        <span class="eyebrow">İZLENEBİLİRLİK</span>
+        <h2>Ürünün hikâyesi görünür.</h2>
+        <p>Demo lot kodunu kullanarak ürünün örnek üretim ve sevkiyat zincirini görüntüle.</p>
+        <div class="trace-search">
+          <input id="traceInput" value="TT-2026-001" aria-label="Lot kodu" />
+          <button class="btn" id="traceButton">Sorgula</button>
+        </div>
+      </div>
+      <div class="trace-card" id="traceResult">
+        <span class="tag">TT-2026-001</span>
+        <h3>Domates • 1. kalite</h3>
+        <ul>
+          <li><b>Üretici:</b> Bereket Çiftliği</li>
+          <li><b>Hasat:</b> 17 Ağustos 2026</li>
+          <li><b>Konum:</b> Kahramanmaraş</li>
+          <li><b>Durum:</b> Sevkiyata hazır</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="brand">Tarladan <span>Tabağa</span></div>
+    <p>Çalışan MVP • Yatırımcı ve hibe başvuruları için demo sürüm</p>
+  </footer>
+
+  <div class="modal" id="demoModal" aria-hidden="true">
+    <div class="modal-card">
+      <button class="close" data-close-panel aria-label="Kapat">×</button>
+      <span class="eyebrow">YATIRIMCI PANELİ • DEMO</span>
+      <h2>Operasyon özeti</h2>
+      <div class="dash-grid">
+        <div><span>Aktif üretici</span><strong>12</strong></div>
+        <div><span>Listelenen ürün</span><strong>38</strong></div>
+        <div><span>Açık talep</span><strong>9</strong></div>
+        <div><span>Tamamlanan eşleşme</span><strong>27</strong></div>
+      </div>
+      <div class="progress-block">
+        <div><span>Tedarik eşleşme oranı</span><b>%76</b></div>
+        <progress value="76" max="100"></progress>
+      </div>
+      <p class="muted">Rakamlar MVP iş akışını göstermek için kullanılan demo verileridir; gerçek ticari performans iddiası değildir.</p>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
