@@ -2,10 +2,16 @@
   "schema_version": 1,
   "generated_at": "2026-08-18T03:50:57Z",
   "pricing_rule": {
-    "name": "Tarladan Tabağa Adil Fiyat",
-    "formula": "farmerAsk + 0.40 * (officialReference - farmerAsk)",
-    "condition": "Sadece farmerAsk < officialReference ise öneri üretilir.",
-    "note": "Çiftçi teklifinin üstünde, resmi referansın orta noktasının altında öneri üretir; gerçek lojistik/platform maliyeti pilot verisiyle ayrıca doğrulanmalıdır."
+    "name": "Tarladan Tabağa YZ Fiyat Politikası",
+    "farmer_sets_price": false,
+    "pricing_owner": "AI_OPERATION_CENTER",
+    "platform_rate": 0.20,
+    "farmer_uplift_rate": 0.05,
+    "consumer_discount_target": 0.10,
+    "farmer_payout_formula": "official_agriculture_reference * 1.05",
+    "consumer_final_price_formula": "farmer_payout / 0.80",
+    "operation_share_formula": "consumer_final_price * 0.20",
+    "consumer_benefit_gate": "when an authorized retail reference exists, final price must remain at least 10% below it; otherwise consumer-saving claim is not displayed"
   },
   "sources": {
     "hks": {
