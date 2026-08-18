@@ -2,287 +2,110 @@
 <html lang="tr">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="description" content="Tarladan Tabağa — çiftçiyi vatandaşa doğrudan bağlayan, siparişten foto onaya, drone teslimattan güvenli ödemeye kadar uzanan MVP." />
-  <title>Tarladan Tabağa | Çiftçiden vatandaşa doğrudan</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#07131f" />
+  <meta name="description" content="Tarladan Tabağa — çiftçiden vatandaşa doğrudan, yapay zekâ fiyatlama ve drone lojistiği." />
+  <title>Tarladan Tabağa</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <header class="topbar">
-    <a class="brand" href="#top"><span class="mark">TT</span><span>Tarladan <b>Tabağa</b></span></a>
-    <nav>
-      <a href="#sorun">Sorun</a>
-      <a href="#urunler">Ürünler</a>
-      <a href="#gorsel-akis">Tüketici deneyimi</a>
-      <a href="#akis">Canlı akış</a>
-      <a href="#merkez">Merkez</a>
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="brand"><span class="brand-mark">TT</span><div><b>Tarladan <em>Tabağa</em></b><small id="priceFeedStatus">Resmi fiyat akışı yükleniyor…</small></div></div>
+      <div class="header-live"><i></i><span id="systemStatus">Sistem hazır</span></div>
+    </header>
+
+    <main class="view-stack">
+      <section class="app-view active" data-view="market">
+        <div class="view-head">
+          <div><span class="eyebrow">DOĞRUDAN ÜRETİCİDEN</span><h1>Bugünün taze ürünleri</h1></div>
+          <button class="icon-btn" id="refreshPrices" aria-label="Fiyatları yenile">↻</button>
+        </div>
+
+        <div class="category-tabs" id="categoryTabs">
+          <button class="chip active" data-category="all">Tümü</button>
+          <button class="chip" data-category="Sebze">Sebze</button>
+          <button class="chip" data-category="Meyve">Meyve</button>
+          <button class="chip" data-category="Doğal Ürün">Doğal</button>
+        </div>
+
+        <div class="product-rail" id="productRail"></div>
+
+        <article class="product-detail" id="productDetail">
+          <div class="product-photo" id="detailPhoto">
+            <div class="photo-overlay"><span id="detailLiveBadge">TARLA GÖRÜNÜMÜ</span><b id="detailFarm">—</b></div>
+          </div>
+          <div class="detail-body">
+            <div class="detail-title-row"><div><h2 id="detailName">Ürün</h2><p id="detailLocation">—</p></div><div class="price-block"><small>YZ SATIŞ FİYATI</small><strong id="detailPrice">—</strong></div></div>
+            <div class="detail-meta"><span><b id="detailPayout">—</b><small>Üreticiye doğrudan</small></span><span><b id="detailSource">—</b><small>Resmi referans</small></span><span><b id="detailFresh">—</b><small>Tazelik</small></span></div>
+            <div class="order-bar"><div class="qty"><button id="qtyMinus">−</button><b id="qtyValue">5 kg</b><button id="qtyPlus">+</button></div><button class="primary-btn" id="startOrder">Sipariş ver</button></div>
+          </div>
+        </article>
+      </section>
+
+      <section class="app-view" data-view="order">
+        <div class="view-head"><div><span class="eyebrow">SİPARİŞ AKIŞI</span><h1 id="orderTitle">Henüz sipariş yok</h1></div><span class="order-code" id="orderCode">—</span></div>
+        <div class="order-overview">
+          <div class="order-product-mini"><div class="mini-thumb" id="orderThumb"></div><div><b id="orderProduct">Ürün seçilmedi</b><small id="orderSummary">Pazar menüsünden sipariş oluşturun.</small></div></div>
+          <div class="progress-track"><i id="orderProgress"></i></div>
+          <div class="stage-grid" id="stageGrid"></div>
+        </div>
+        <div class="order-now">
+          <div class="now-icon" id="nowIcon">◉</div>
+          <div><span>ŞU AN</span><h3 id="nowTitle">Sipariş bekleniyor</h3><p id="nowText">Bir ürün seçip sipariş verdiğinizde tüm süreç burada canlı ilerler.</p></div>
+        </div>
+        <button class="secondary-btn wide" id="openLiveFromOrder">Canlı takibe geç</button>
+      </section>
+
+      <section class="app-view" data-view="live">
+        <div class="view-head compact"><div><span class="eyebrow">CANLI TAKİP</span><h1>Drone rota + kamera</h1></div><div class="live-pill"><i></i><span id="liveModeLabel">Pilot simülasyon</span></div></div>
+        <div class="live-tabs"><button class="active" data-live-pane="map">Rota</button><button data-live-pane="camera">Drone kamerası</button></div>
+
+        <div class="live-pane active" data-live-content="map">
+          <div class="map-wrap"><div id="routeMap"></div><div class="map-hud top-left"><span>DRONE</span><b id="mapDroneId">TT-D01</b></div><div class="map-hud top-right"><span>ETA</span><b id="mapEta">—</b></div></div>
+          <div class="telemetry-row"><div><span>İrtifa</span><b id="altitude">0 m</b></div><div><span>Hız</span><b id="speed">0 km/s</b></div><div><span>Batarya</span><b id="battery">100%</b></div><div><span>Mesafe</span><b id="distance">—</b></div></div>
+          <div class="live-status"><span id="routeStatusDot"></span><div><b id="routeStatusTitle">Rota bekleniyor</b><small id="routeStatusText">Sipariş verildiğinde operasyon merkezi rotayı burada gösterecek.</small></div></div>
+        </div>
+
+        <div class="live-pane" data-live-content="camera">
+          <div class="camera-shell" id="cameraShell">
+            <video id="droneVideo" playsinline muted autoplay loop></video>
+            <div class="camera-fallback" id="cameraFallback"></div>
+            <div class="camera-scan"></div>
+            <div class="cam-top"><span><i></i> DRONE CAM</span><b id="camTime">00:00:00</b></div>
+            <div class="crosshair"><i></i><i></i></div>
+            <div class="cam-bottom"><span>ALT <b id="camAlt">0 m</b></span><span>SPD <b id="camSpeed">0 km/s</b></span><span>GPS <b id="camGps">—</b></span></div>
+          </div>
+          <div class="camera-caption"><b id="cameraTitle">Kamera bağlantısı hazır</b><small id="cameraText">Gerçek drone video URL'si tanımlandığında bu alan doğrudan canlı yayına geçer; şu an pilot saha görünümü kullanılıyor.</small></div>
+        </div>
+      </section>
+
+      <section class="app-view" data-view="ops">
+        <div class="view-head"><div><span class="eyebrow">OPERASYON MERKEZİ</span><h1>Tek ekranda kontrol</h1></div><span class="ops-badge">AI OPS</span></div>
+        <div class="ops-grid">
+          <article><span>Aktif sipariş</span><b id="opsOrderCount">0</b><small id="opsOrderState">Beklemede</small></article>
+          <article><span>Drone</span><b id="opsDroneState">Hazır</b><small id="opsDroneDetail">TT-D01 • merkez</small></article>
+          <article><span>Fiyat motoru</span><b id="opsPriceState">Bağlı</b><small>HKS / TOBB referansı</small></article>
+          <article><span>Üretici ödeme</span><b id="opsPayoutState">Beklemede</b><small>Kalkış doğrulaması sonrası</small></article>
+        </div>
+        <div class="ops-timeline" id="opsTimeline"></div>
+        <div class="ops-note"><span>OTOMASYON</span><p>Fiyat, görev, rota, teslimat ve ödeme durumu aynı sipariş kimliği üzerinden yönetilir. Gerçek drone telemetrisi bağlandığında demo veri otomatik devreden çıkar.</p></div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="Ana menü">
+      <button class="active" data-nav="market"><span>⌂</span><b>Pazar</b></button>
+      <button data-nav="order"><span>▣</span><b>Sipariş</b></button>
+      <button data-nav="live"><span>⌖</span><b>Canlı</b></button>
+      <button data-nav="ops"><span>◫</span><b>Merkez</b></button>
     </nav>
-  </header>
+  </div>
 
-  <main id="top">
-    <section class="hero">
-      <div>
-        <span class="kicker">ÜRETİCİ VE VATANDAŞ ODAKLI MVP</span>
-        <h1>Çiftçi emeğinin karşılığını alsın, vatandaş aynı ürünü daha taze ve daha uygun alsın.</h1>
-        <p class="lead">Tarladan Tabağa; kayıtlı çiftçilerin ürünlerini konum ve fiyatıyla vatandaşa gösteren, siparişi aynı anda çiftçi telefonuna ve yapay zekâ destekli drone operasyon merkezine düşüren, foto onaylı ve güvenli ödemeli doğrudan tedarik modelidir.</p>
-        <div class="hero-actions">
-          <a class="btn primary" href="#urunler">Çiftçi ürünlerini gör</a>
-          <button class="btn secondary" data-start-flow>Canlı akışı başlat</button>
-        </div>
-        <div class="mini-cards">
-          <div><b>Çiftçi kazanır</b><span>Düşük fiyata mecbur kalmaz.</span></div>
-          <div><b>Vatandaş kazanır</b><span>Daha taze ve daha uygun alır.</span></div>
-          <div><b>Aracı azalır</b><span>Zincir kısalır, şeffaflık artar.</span></div>
-        </div>
-      </div>
-      <div class="hero-panel">
-        <span>CANLI ÖZET</span>
-        <h3 id="heroStatus">Sipariş hazır</h3>
-        <div class="route">
-          <div class="node active" data-route="0">📱<small>Sipariş</small></div>
-          <div class="line"></div>
-          <div class="node" data-route="1">🌿<small>Çiftçi</small></div>
-          <div class="line"></div>
-          <div class="node" data-route="2">✦<small>Merkez</small></div>
-          <div class="line"></div>
-          <div class="node" data-route="3">📸<small>Onay</small></div>
-          <div class="line"></div>
-          <div class="node" data-route="4">🚁<small>Drone</small></div>
-          <div class="line"></div>
-          <div class="node" data-route="5">🏠<small>Teslim</small></div>
-        </div>
-        <p id="heroText">Sipariş oluştuğunda süreç aynı anda çiftçiye ve operasyon merkezine düşer.</p>
-      </div>
-    </section>
-
-    <section class="section light" id="sorun">
-      <span class="kicker">PROJENİN DERDİ</span>
-      <h2>Bugün çiftçi ucuza satıyor, vatandaş pahalıya alıyor.</h2>
-      <div class="problem-grid">
-        <article>
-          <h3>Mevcut sorun</h3>
-          <ul>
-            <li>Komisyoncu / halci / toptancı zinciri fiyatı büyütüyor.</li>
-            <li>Çiftçi ürün çürümesin diye düşük fiyata vermek zorunda kalıyor.</li>
-            <li>Vatandaş aynı ürünü markette daha pahalı ve daha az taze alıyor.</li>
-          </ul>
-        </article>
-        <article class="dark-card">
-          <h3>Tarladan Tabağa çözümü</h3>
-          <ul>
-            <li>Uygulamada çiftçi ürünü, tarla konumu ve fiyatı görünür.</li>
-            <li>Sipariş anında çiftçinin telefonuna bildirim gider.</li>
-            <li>YZ merkezi drone/lojistik görevini oluşturur.</li>
-            <li>Foto onay, güvenli ödeme ve teslim zinciri aynı sistemde yürür.</li>
-          </ul>
-        </article>
-      </div>
-    </section>
-
-    <section class="section" id="urunler">
-      <div class="head-row">
-        <div>
-          <span class="kicker">VATANDAŞIN GÖRECEĞİ ÜRÜNLER</span>
-          <h2>Çiftçi ürünleri, konumları ve fiyat karşılaştırması</h2>
-          <p>Referans piyasa fiyatı ile doğrudan çiftçi fiyatı yan yana gösterilir.</p>
-        </div>
-        <div class="note-box">Demo gösterim: sonraki aşamada Türkiye referans fiyatları düzenli veriyle güncellenecek.</div>
-      </div>
-      <div class="products" id="productGrid"></div>
-    </section>
-
-    <section class="section media-demo" id="gorsel-akis">
-      <div class="head-row media-head">
-        <div>
-          <span class="kicker">TÜKETİCİ DENEYİMİ</span>
-          <h2>Ürünü tarlada gör, başlığa dokun ve canlı akışı izle.</h2>
-          <p>Tüketici uygulamada hem sebze / meyve / doğal ürünleri tarladaki canlı video alanı gibi görür, hem de başlıklara dokunarak sipariş sürecinin farklı ekranlarını açar.</p>
-        </div>
-        <div class="media-tabs" id="mediaTabs">
-          <button class="media-tab active" data-media="sebze">Sebzeler</button>
-          <button class="media-tab" data-media="meyve">Meyveler</button>
-          <button class="media-tab" data-media="dogal">Doğal Ürünler</button>
-          <button class="media-tab" data-media="surec">Canlı Akış</button>
-        </div>
-      </div>
-
-      <div class="media-view active" data-view="sebze">
-        <div class="video-card big">
-          <div class="video-top"><span>CANLI TARLA GÖRÜNÜMÜ</span><b>Bereket Çiftliği • Kahramanmaraş</b></div>
-          <div class="field-stage veg-stage">
-            <div class="field-sun"></div>
-            <div class="field-hill hill-back"></div>
-            <div class="field-hill hill-front"></div>
-            <div class="plant p1">🍅</div>
-            <div class="plant p2">🍅</div>
-            <div class="plant p3">🌶️</div>
-            <div class="drift-label">Tarla üstü ürün görünümü</div>
-          </div>
-          <div class="video-bottom"><span>Domates • Biber • tarladan canlı görünüm</span><small>Vatandaş ürünün bulunduğu ortamı ve hasat alanını görür.</small></div>
-        </div>
-        <div class="clip-grid">
-          <article class="clip-card"><div class="mini-stage veg-mini">🍅</div><h3>Bahçe Domatesi</h3><p>Çiftçi fiyatı 24 ₺/kg • referans fiyat 40 ₺/kg</p></article>
-          <article class="clip-card"><div class="mini-stage pepper-mini">🌶️</div><h3>Kapya Biber</h3><p>Çiftçi fiyatı 31 ₺/kg • referans fiyat 49 ₺/kg</p></article>
-        </div>
-      </div>
-
-      <div class="media-view" data-view="meyve">
-        <div class="video-card big">
-          <div class="video-top"><span>CANLI BAHÇE GÖRÜNÜMÜ</span><b>Yayla Bahçesi • Niğde</b></div>
-          <div class="field-stage fruit-stage">
-            <div class="field-sun"></div>
-            <div class="field-hill hill-back"></div>
-            <div class="field-hill hill-front"></div>
-            <div class="plant p1">🍎</div>
-            <div class="plant p2">🍇</div>
-            <div class="plant p3">🍎</div>
-            <div class="drift-label">Meyve bahçesi görünümü</div>
-          </div>
-          <div class="video-bottom"><span>Elma • Üzüm • canlı bahçe görünümü</span><small>Tüketici meyvelerin yetiştiği alanı uygulama içinde izler.</small></div>
-        </div>
-        <div class="clip-grid">
-          <article class="clip-card"><div class="mini-stage apple-mini">🍎</div><h3>Elma</h3><p>Çiftçi fiyatı 27 ₺/kg • referans fiyat 43 ₺/kg</p></article>
-          <article class="clip-card"><div class="mini-stage grape-mini">🍇</div><h3>Üzüm</h3><p>Çiftçi fiyatı 36 ₺/kg • referans fiyat 58 ₺/kg</p></article>
-        </div>
-      </div>
-
-      <div class="media-view" data-view="dogal">
-        <div class="video-card big">
-          <div class="video-top"><span>CANLI ÜRETİM GÖRÜNÜMÜ</span><b>Dağ Arıcılığı • Andırın</b></div>
-          <div class="field-stage natural-stage">
-            <div class="field-sun"></div>
-            <div class="field-hill hill-back"></div>
-            <div class="field-hill hill-front"></div>
-            <div class="plant p1">🍯</div>
-            <div class="plant p2">🌰</div>
-            <div class="plant p3">🍯</div>
-            <div class="drift-label">Doğal ürün üretim alanı</div>
-          </div>
-          <div class="video-bottom"><span>Bal • Ceviz • üretim alanı görünümü</span><small>Vatandaş doğal ürünlerin üretim sahasını ve kaynağını görür.</small></div>
-        </div>
-        <div class="clip-grid">
-          <article class="clip-card"><div class="mini-stage honey-mini">🍯</div><h3>Doğal Bal</h3><p>Çiftçi fiyatı 290 ₺/kg • referans fiyat 390 ₺/kg</p></article>
-          <article class="clip-card"><div class="mini-stage nut-mini">🌰</div><h3>Ceviz</h3><p>Çiftçi fiyatı 175 ₺/kg • referans fiyat 245 ₺/kg</p></article>
-        </div>
-      </div>
-
-      <div class="media-view" data-view="surec">
-        <div class="head-row sub-flow-head">
-          <div>
-            <span class="kicker">BAŞLIĞA DOKUN • CANLI EKRANI AÇ</span>
-            <h3 class="mini-title">Tüketici, çiftçi, operasyon merkezi ve drone görüntüsü</h3>
-          </div>
-          <div class="live-scene-tabs" id="liveSceneTabs">
-            <button class="live-scene-tab active" data-scene="consumer">Tüketici</button>
-            <button class="live-scene-tab" data-scene="farmer">Çiftçi</button>
-            <button class="live-scene-tab" data-scene="center">Operasyon Merkezi</button>
-            <button class="live-scene-tab" data-scene="drone">Drone Kamerası</button>
-          </div>
-        </div>
-
-        <div class="scene-panel active" data-scene-panel="consumer">
-          <div class="scene-preview consumer-screen">
-            <div class="screen-chip">CANLI EKRAN</div>
-            <h4>Tüketici uygulaması</h4>
-            <p>Ürünler, fiyat karşılaştırması, görsel onay ve teslimat takibi aynı ekranda görünür.</p>
-            <div class="screen-rail"><span class="active">Ürün seçimi</span><span>Foto onay</span><span>Teslimat izleme</span></div>
-          </div>
-        </div>
-
-        <div class="scene-panel" data-scene-panel="farmer">
-          <div class="scene-preview farmer-screen">
-            <div class="screen-chip">ÇİFTÇİ TELEFONU</div>
-            <h4>Yeni sipariş bildirimi</h4>
-            <p>Çiftçi telefonunda ürün adı, miktar, teslim istasyonu ve görev tamamla akışı görünür.</p>
-            <div class="screen-rail"><span class="active">Sipariş düştü</span><span>Fotoğraf yükle</span><span>Görevi tamamla</span></div>
-          </div>
-        </div>
-
-        <div class="scene-panel" data-scene-panel="center">
-          <div class="scene-preview center-screen">
-            <div class="screen-chip">YZ OPERASYON MERKEZİ</div>
-            <h4>Görev, rota ve iniş alanı paneli</h4>
-            <p>Merkez kilogram, çiftçi konumu, teslim istasyonu ve yasal rota bilgisine göre görevi üretir.</p>
-            <div class="screen-rail"><span class="active">Görev üretildi</span><span>Rota planı</span><span>Uçuş izleme</span></div>
-          </div>
-        </div>
-
-        <div class="scene-panel" data-scene-panel="drone">
-          <div class="scene-preview drone-screen">
-            <div class="screen-chip">DRONE KAMERASI</div>
-            <h4>Canlı uçuş görünümü</h4>
-            <p>Vatandaş drone’un çiftçiden aldığı ürünü teslim istasyonuna taşırken kamera görünümünü izler.</p>
-            <div class="screen-rail"><span class="active">Kalkış</span><span>Rota üzerinde</span><span>Teslimat</span></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="akis">
-      <div class="head-row">
-        <div>
-          <span class="kicker">VİDEOLU / CANLI AKIŞ DEMOSU</span>
-          <h2>Siparişten teslimata kadar tüm süreç</h2>
-        </div>
-        <button class="btn primary" data-start-flow>Akışı oynat</button>
-      </div>
-
-      <div class="flow-wrap">
-        <div class="flow-steps">
-          <button class="step active" data-stage="0">1. Sipariş oluştu</button>
-          <button class="step" data-stage="1">2. Çiftçi bildirimi</button>
-          <button class="step" data-stage="2">3. YZ operasyon planı</button>
-          <button class="step" data-stage="3">4. Bahçeden toplama</button>
-          <button class="step" data-stage="4">5. Fotoğraf ve onay</button>
-          <button class="step" data-stage="5">6. Paket ve görev tamamlama</button>
-          <button class="step" data-stage="6">7. Drone kalkışı + ödeme</button>
-          <button class="step" data-stage="7">8. Teslimat ve dönüş</button>
-        </div>
-
-        <div class="flow-main">
-          <div class="detail-card">
-            <div class="detail-top"><span id="detailStep">ADIM 01</span><b id="detailStatus">SİPARİŞ OLUŞTU</b></div>
-            <div class="icon-box" id="detailIcon">📱</div>
-            <h3 id="detailTitle">Vatandaş ürün seçer.</h3>
-            <p id="detailText">Ürün, kilogram ve teslim istasyonu seçildiğinde sipariş oluşur.</p>
-            <div class="detail-grid" id="detailGrid"></div>
-          </div>
-
-          <div class="live-card">
-            <div class="live-head"><span id="liveCode">TT-SIP-001</span><b id="liveProduct">Bahçe Domatesi</b></div>
-            <div class="status-list">
-              <article><span>Vatandaş</span><strong id="consumerStatus">Sipariş oluşturuldu</strong><small id="consumerHint">Ödeme güvenli hesapta tutulur.</small></article>
-              <article><span>Çiftçi telefonu</span><strong id="farmerStatus">Bildirim bekleniyor</strong><small id="farmerHint">Sipariş bilgisi burada görünür.</small></article>
-              <article><span>YZ operasyon merkezi</span><strong id="centerStatus">Planlama başlıyor</strong><small id="centerHint">Rota ve görev hesaplanır.</small></article>
-              <article><span>Drone / lojistik</span><strong id="droneStatus">Atama bekleniyor</strong><small id="droneHint">İniş alanı ve rota burada izlenir.</small></article>
-              <article><span>Ödeme</span><strong id="paymentStatus">Beklemede</strong><small id="paymentHint">Kalkış anına kadar korunur.</small></article>
-              <article><span>Foto onay</span><strong id="approvalStatus">Henüz yok</strong><small id="approvalHint">Çiftçi ürün fotoğraflarını gönderecek.</small></article>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section light" id="merkez">
-      <span class="kicker">OPERASYON MERKEZİ</span>
-      <h2>Merkez siparişi sadece kaydetmez, fiziksel göreve dönüştürür.</h2>
-      <div class="metrics">
-        <article><span>Kayıtlı çiftçi</span><strong>12</strong><small>Pilot senaryo</small></article>
-        <article><span>Aktif ürün</span><strong>38</strong><small>Demo katalog</small></article>
-        <article><span>Tüketici tasarruf potansiyeli</span><strong>%35</strong><small>Örnek sepet etkisi</small></article>
-        <article><span>Drone görev durumu</span><strong>Hazır</strong><small>İniş alanı tanımlı</small></article>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <a class="brand" href="#top"><span class="mark">TT</span><span>Tarladan <b>Tabağa</b></span></a>
-    <p>Çiftçinin ve vatandaşın yanında duran doğrudan dijital tarım-gıda lojistiği MVP'si.</p>
-  </footer>
-
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <script src="app.js"></script>
 </body>
 </html>
