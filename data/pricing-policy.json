@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "name": "Tarladan Tabağa YZ Fiyat Politikası",
+  "platform_rate": 0.20,
+  "farmer_uplift_rate": 0.05,
+  "consumer_discount_target": 0.10,
+  "farmer_sets_price": false,
+  "pricing_owner": "AI_OPERATION_CENTER",
+  "public_ui": {
+    "show_consumer_final_price": true,
+    "show_official_agriculture_reference": true,
+    "show_farmer_payout": true,
+    "show_operation_share_as_separate_line": false
+  },
+  "calculation": {
+    "farmer_payout": "official_agriculture_reference * 1.05",
+    "consumer_final_price": "farmer_payout / 0.80",
+    "operation_share": "consumer_final_price * 0.20",
+    "consumer_benefit_gate": "when an authorized retail reference exists, final price must remain at least 10% below it; otherwise consumer-saving claim is not displayed"
+  },
+  "accounting_note": "The 20% operation share is an internal gross operation allocation per kg; taxes, payment fees, drone/energy, insurance and other operating costs must be deducted separately to determine net profit."
+}
