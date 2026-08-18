@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-08-18T03:47:18Z",
+  "generated_at": "2026-08-18T03:48:51Z",
   "pricing_rule": {
     "name": "Tarladan Tabağa Adil Fiyat",
     "formula": "farmerAsk + 0.40 * (officialReference - farmerAsk)",
@@ -15,36 +15,36 @@
       "data_date": "2026-08-18"
     },
     "tobb": {
-      "ok": true,
+      "ok": false,
       "name": "TOBB Ticaret Borsaları Ürün Fiyat Bilgileri",
       "url": "https://borsa.tobb.org.tr/",
-      "data_date": "2026-07-07"
+      "error": ""
     }
   },
   "products": {
     "domates": {
-      "official_avg": 18.87,
+      "official_avg": 17.44,
       "unit": "kg",
       "source": "hks",
       "source_name": "Ticaret Bakanlığı HKS",
       "source_product": "DOMATES / DİĞER",
-      "data_date": null
+      "data_date": "2026-08-18"
     },
     "kapya_biber": {
-      "official_avg": 22.45,
+      "official_avg": 24.59,
       "unit": "kg",
       "source": "hks",
       "source_name": "Ticaret Bakanlığı HKS",
       "source_product": "BİBER SALÇALIK (KAPYA)",
-      "data_date": null
+      "data_date": "2026-08-18"
     },
     "elma": {
-      "official_avg": 24.64,
+      "official_avg": 26.18,
       "unit": "kg",
       "source": "hks",
       "source_name": "Ticaret Bakanlığı HKS",
       "source_product": "ELMA / DİĞER",
-      "data_date": null
+      "data_date": "2026-08-18"
     },
     "ceviz": {
       "official_avg": 280000.0,
