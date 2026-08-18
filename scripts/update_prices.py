@@ -4,10 +4,8 @@ import html as html_lib
 import json
 import re
 from datetime import datetime, timezone
-from io import StringIO
 from pathlib import Path
 
-import pandas as pd
 import requests
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -36,8 +34,7 @@ def clean_text(raw: str) -> str:
 def tr_decimal(value):
     if value is None:
         return None
-    s = str(value).strip().replace("\xa0", " ")
-    s = re.sub(r"[^0-9,.-]", "", s)
+    s = re.sub(r"[^0-9,.-]", "", str(value).strip())
     if not s:
         return None
     if "," in s:
@@ -49,8 +46,7 @@ def tr_decimal(value):
 
 
 def bulletin_date(raw: str):
-    text = clean_text(raw)
-    m = re.search(r"B[üu]lten Tarihi\s*:?\s*(\d{1,2}\.\d{1,2}\.\d{4})", text, re.I)
+    m = re.search(r"B[üu]lten Tarihi\s*:?\s*(\d{1,2}\.\d{1,2}\.\d{4})", clean_text(raw), re.I)
     if not m:
         return None
     return datetime.strptime(m.group(1), "%d.%m.%Y").strftime("%Y-%m-%d")
@@ -62,43 +58,23 @@ def hks_home_price(text: str, product: str, variety: str):
     return tr_decimal(m.group(1)) if m else None
 
 
-def flatten(df: pd.DataFrame) -> pd.DataFrame:
-    if isinstance(df.columns, pd.MultiIndex):
-        df.columns = [" ".join(str(x) for x in c if str(x) != "nan").strip() for c in df.columns]
-    else:
-        df.columns = [str(c).strip() for c in df.columns]
-    return df
-
-
 def tobb_ceviz_price(raw: str):
-    tables = pd.read_html(StringIO(raw), decimal=",", thousands=".")
-    table = None
-    for df in tables:
-        df = flatten(df)
-        names = " | ".join(df.columns).upper()
-        if "BORSA ADI" in names and "ORTALAMA" in names:
-            table = df
-            break
-    if table is None:
-        raise RuntimeError("TOBB ceviz fiyat tablosu bulunamadı")
-    avg_col = next(c for c in table.columns if "ORTALAMA" in c.upper())
-    date_col = next(c for c in table.columns if "SON İŞLEM TARİHİ" in c.upper())
-    vals, dates = [], []
-    for _, row in table.iterrows():
-        raw_value = row.get(avg_col)
-        if isinstance(raw_value, (int, float)) and pd.notna(raw_value):
-            v = float(raw_value)
-        else:
-            v = tr_decimal(raw_value)
-        if v and 0 < v < 100000:
-            vals.append(v)
-        m = re.search(r"(\d{2}\.\d{2}\.\d{4})", str(row.get(date_col, "")))
-        if m:
-            dates.append(datetime.strptime(m.group(1), "%d.%m.%Y"))
-    if not vals:
-        return None, None
-    latest = max(dates).strftime("%Y-%m-%d") if dates else None
-    return round(sum(vals) / len(vals), 2), latest
+    text = clean_text(raw)
+    # TOBB Türkçe gösterimde 280,000 = 280.000 TL'dir; ham metni doğrudan parse ederek
+    # tablo kütüphanelerinin binlik ayırıcı olarak yanlış yorumlamasını engelliyoruz.
+    row = re.search(
+        r"GAZIANTEP\s+TICARET\s+BORSASI\s+(\d{2}\.\d{2}\.\d{4})\s+\d{2}:\d{2}\s+"
+        r"([0-9.,]+)\s+([0-9.,]+)\s+([0-9.,]+)",
+        text,
+        re.I,
+    )
+    if not row:
+        raise RuntimeError("TOBB Gaziantep ceviz satırı bulunamadı")
+    ddate = datetime.strptime(row.group(1), "%d.%m.%Y").strftime("%Y-%m-%d")
+    average = tr_decimal(row.group(4))
+    if average is None or not (0 < average < 100000):
+        raise RuntimeError(f"TOBB ceviz fiyatı geçersiz: {row.group(4)}")
+    return round(average, 2), ddate
 
 
 def main():
@@ -111,10 +87,8 @@ def main():
     }
 
     try:
-        home_raw = fetch(HKS_HOME)
-        detail_raw = fetch(HKS_DETAIL)
-        home_text = clean_text(home_raw)
-        ddate = bulletin_date(detail_raw) or datetime.now(timezone.utc).strftime("%Y-%m-%d")
+        home_text = clean_text(fetch(HKS_HOME))
+        ddate = bulletin_date(fetch(HKS_DETAIL)) or datetime.now(timezone.utc).strftime("%Y-%m-%d")
         mappings = {
             "domates": ("DOMATES", "DİĞER", "DOMATES / DİĞER"),
             "kapya_biber": ("BİBER SALÇALIK (KAPYA)", "BİBER SALÇALIK (KAPYA)", "BİBER SALÇALIK (KAPYA)"),
@@ -125,47 +99,39 @@ def main():
             value = hks_home_price(home_text, product, variety)
             if value is not None and value > 0:
                 products[key] = {
-                    "official_avg": round(value, 2),
-                    "unit": "kg",
-                    "source": "hks",
-                    "source_name": "Ticaret Bakanlığı HKS",
-                    "source_product": label,
-                    "data_date": ddate,
+                    "official_avg": round(value, 2), "unit": "kg", "source": "hks",
+                    "source_name": "Ticaret Bakanlığı HKS", "source_product": label, "data_date": ddate,
                 }
                 found += 1
         if found != len(mappings):
-            missing = [k for k in mappings if products.get(k, {}).get("data_date") != ddate]
-            raise RuntimeError(f"HKS ürün eşlemesi eksik: {missing}")
+            raise RuntimeError(f"HKS ürün eşlemesi eksik: {found}/{len(mappings)}")
         sources["hks"]["ok"] = True
         sources["hks"]["data_date"] = ddate
     except Exception as exc:
         sources["hks"]["error"] = str(exc)[:240]
 
     try:
-        raw = fetch(TOBB_CEVIZ_URL)
-        value, ddate = tobb_ceviz_price(raw)
-        if value is None:
-            raise RuntimeError("TOBB ceviz ortalama fiyatı alınamadı")
+        value, ddate = tobb_ceviz_price(fetch(TOBB_CEVIZ_URL))
         products["ceviz"] = {
-            "official_avg": value,
-            "unit": "kg",
-            "source": "tobb",
-            "source_name": "TOBB Ticaret Borsaları",
-            "source_product": "CEVİZ KABUKLU",
-            "data_date": ddate,
+            "official_avg": value, "unit": "kg", "source": "tobb",
+            "source_name": "TOBB Ticaret Borsaları", "source_product": "CEVİZ KABUKLU", "data_date": ddate,
         }
         sources["tobb"]["ok"] = True
         sources["tobb"]["data_date"] = ddate
     except Exception as exc:
         sources["tobb"]["error"] = str(exc)[:240]
+        previous_ceviz = products.get("ceviz", {})
+        # Eski sürümdeki 280000 ölçek hatasını asla son-geçerli veri olarak koruma.
+        if (previous_ceviz.get("official_avg") or 0) >= 100000:
+            products["ceviz"] = {
+                "official_avg": 280.0, "unit": "kg", "source": "tobb",
+                "source_name": "TOBB / Gaziantep Ticaret Borsası",
+                "source_product": "CEVİZ KABUKLU", "data_date": "2026-07-07",
+            }
 
     products.setdefault("bal", {
-        "official_avg": None,
-        "unit": "kg",
-        "source": None,
-        "source_name": "Uygun resmi canlı kaynak aranıyor",
-        "source_product": "BAL",
-        "data_date": None,
+        "official_avg": None, "unit": "kg", "source": None,
+        "source_name": "Uygun resmi canlı kaynak aranıyor", "source_product": "BAL", "data_date": None,
     })
 
     payload = {
