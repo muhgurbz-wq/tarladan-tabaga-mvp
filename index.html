@@ -3,62 +3,198 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <meta name="theme-color" content="#06111b" />
-  <meta name="description" content="Tarladan Tabağa — resmi fiyat verisi, yapay zekâ orkestrasyonu, üretici görevleri, güvenli ödeme ve otonom lojistiği tek akışta birleştiren tarım-gıda altyapısı." />
+  <meta name="theme-color" content="#03111b" />
+  <meta name="description" content="Tarladan Tabağa — resmi fiyat verisi, yapay zekâ orkestrasyonu, üretici görevleri, güvenli ödeme ve otonom lojistiği tek akışta birleştiren tarım-gıda platformu." />
   <title>Tarladan Tabağa — TT Core</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
-  <link rel="stylesheet" href="competition.css?v=20260818c" />
+  <link rel="stylesheet" href="competition.css?v=20260819-final" />
 </head>
 <body>
-  <div class="app">
+  <div class="app-shell">
     <header class="topbar">
-      <div class="brand"><div class="brandmark">TT</div><div class="brandcopy"><b>Tarladan <span>Tabağa</span></b><small id="sourceState">HKS / TOBB veri katmanı hazırlanıyor</small></div></div>
-      <button class="status" id="systemStatus"><i></i><span>Sistem hazır</span></button>
+      <div class="brand-block">
+        <div class="brandmark">TT</div>
+        <div class="brandcopy">
+          <b>Tarladan <span>Tabağa</span></b>
+          <small id="priceSourceState">Fiyat veri katmanı hazırlanıyor…</small>
+        </div>
+      </div>
+      <div class="top-status">
+        <span class="status-dot"></span>
+        <div><b id="systemState">Sistem hazır</b><small id="selfTestState">Self-test hazırlanıyor</small></div>
+      </div>
     </header>
 
-    <main class="stage">
+    <main class="screens">
       <section class="screen active" data-screen="overview">
-        <div class="overview-grid">
-          <article class="hero panel">
+        <div class="overview-layout">
+          <article class="hero-card surface">
             <div class="hero-copy">
-              <span class="kicker">TT CORE • AUTONOMOUS FOOD LOGISTICS</span>
+              <span class="eyebrow">TT CORE • AUTONOMOUS FOOD NETWORK</span>
               <h1>Tarımda fiyat, görev, ödeme ve teslimatı tek karar motorunda birleştiriyoruz.</h1>
-              <p>Tarladan Tabağa; üreticiyi siparişe göre harekete geçirir, resmi fiyat referanslarını işler, güvenli mutabakatı yönetir ve otonom lojistik görevini tek sipariş kimliği altında koordine eder.</p>
-              <div class="hero-actions"><button class="btn primary" data-go="market">Tüketici deneyimini aç</button><button class="btn ghost" data-go="project">Proje mimarisini gör</button></div>
-              <div class="proofline"><span><i class="ok"></i> HKS / TOBB referansı</span><span><i class="ok"></i> Üretici görev motoru</span><span><i class="warn"></i> Drone: pilot simülasyon</span></div>
+              <p>Resmi tarım fiyatı → yapay zekâ kararı → üretici görevi → görsel onay → güvenli mutabakat → otonom lojistik. Hepsi aynı sipariş kimliğinde.</p>
+              <div class="hero-actions">
+                <button class="btn primary" data-go="market">Tüketici deneyimini aç</button>
+                <button class="btn secondary" id="juryDemo">Jüri demosunu başlat</button>
+              </div>
+              <div class="hero-proof">
+                <span><i class="good"></i> HKS / TOBB resmi referans</span>
+                <span><i class="good"></i> Çoklu üretici görev planı</span>
+                <span><i class="sim"></i> Drone & ödeme: güvenli simülasyon</span>
+              </div>
             </div>
-            <div class="core-visual" aria-hidden="true"><div class="orbit o1"></div><div class="orbit o2"></div><div class="orbit o3"></div><div class="core"><small>AI ORCHESTRATION</small><b>TT CORE</b><span>DATA → DECISION → EXECUTION</span></div><div class="node n1"><b>PRICE</b><span>Data</span></div><div class="node n2"><b>FARM</b><span>Task</span></div><div class="node n3"><b>FLIGHT</b><span>Ops</span></div><div class="node n4"><b>PAY</b><span>Settle</span></div></div>
+            <div class="core-map" aria-hidden="true">
+              <div class="ring ring-1"></div><div class="ring ring-2"></div><div class="ring ring-3"></div>
+              <div class="core-node"><small>AI ORCHESTRATION</small><b>TT CORE</b><span>DATA → DECISION → EXECUTION</span></div>
+              <div class="satellite s1"><b>PRICE</b><small>official data</small></div>
+              <div class="satellite s2"><b>FARM</b><small>tasking</small></div>
+              <div class="satellite s3"><b>FLIGHT</b><small>mission ops</small></div>
+              <div class="satellite s4"><b>PAY</b><small>settlement</small></div>
+            </div>
           </article>
-          <div class="command-strip"><button class="command active"><span>01</span><b>PRICE INTELLIGENCE</b><small>Resmi referans → YZ fiyat</small></button><button class="command"><span>02</span><b>PRODUCER TASKING</b><small>Sipariş → çiftçi görevi</small></button><button class="command"><span>03</span><b>ESCROW SETTLEMENT</b><small>Onay → kontrollü ödeme</small></button><button class="command"><span>04</span><b>AUTONOMOUS LOGISTICS</b><small>Görev → rota → teslimat</small></button></div>
-          <article class="flow panel"><div class="section-head"><div><span class="kicker">END-TO-END FLOW</span><h2>Bir siparişin fiziksel operasyona dönüşmesi</h2></div><button class="micro" id="demoOrder">Demo akışı başlat</button></div><div class="flowline" id="flowline"><div class="flowstep active"><span>01</span><b>Sipariş</b><small>Ürün + kg + teslim noktası</small></div><div class="flowstep"><span>02</span><b>YZ karar</b><small>Fiyat + üretici + görev</small></div><div class="flowstep"><span>03</span><b>Hasat</b><small>Toplama + foto onay</small></div><div class="flowstep"><span>04</span><b>Mutabakat</b><small>Ödeme güvenli beklemede</small></div><div class="flowstep"><span>05</span><b>Uçuş</b><small>Rota + telemetri + teslim</small></div><div class="flowstep"><span>06</span><b>Kapanış</b><small>Üretici hakedişi + kayıt</small></div></div></article>
-          <div class="evidence-grid"><article class="mini-panel"><span class="kicker">PROBLEM</span><h3>Aracı zinciri fiyatı ve tazeliği bozuyor.</h3><p>Üretici alternatif bulamadığında düşük fiyata razı olur; tüketici aynı ürünü daha pahalı ve daha geç alır.</p></article><article class="mini-panel"><span class="kicker">FARK</span><h3>Ürün satmıyoruz; akışı orkestre ediyoruz.</h3><p>Fiyat verisi, üretici görevi, görsel onay, ödeme ve lojistik tek sistem tarafından koordine edilir.</p></article><article class="mini-panel"><span class="kicker">PİLOT ÖLÇÜMÜ</span><h3>Sahada kanıtlanacak metrikler</h3><p>Üretici net geliri, tüketici toplam maliyeti, siparişten teslime süre ve ürün kaybı.</p></article></div>
+
+          <div class="capability-grid">
+            <article class="cap-card"><span>01</span><div><b>Price Intelligence</b><small>Resmi referans verisini YZ fiyat kuralına dönüştürür.</small></div><i>→</i></article>
+            <article class="cap-card"><span>02</span><div><b>Producer Tasking</b><small>Siparişi çiftçinin telefonundaki saha görevine çevirir.</small></div><i>→</i></article>
+            <article class="cap-card"><span>03</span><div><b>Visual Verification</b><small>Hasat fotoğrafı ve vatandaş onayı ile kalite kapısı oluşturur.</small></div><i>→</i></article>
+            <article class="cap-card"><span>04</span><div><b>Autonomous Logistics</b><small>Yük, hub, rota, uçuş sayısı ve teslimatı planlar.</small></div><i>→</i></article>
+          </div>
+
+          <article class="flow-card surface">
+            <div class="section-title"><div><span class="eyebrow">END-TO-END ORCHESTRATION</span><h2>Bir dijital siparişin fiziksel operasyona dönüşümü</h2></div><span class="mode-badge">JÜRİ TEST MODU</span></div>
+            <div class="flowline" id="overviewFlow">
+              <div class="flowstep active"><span>01</span><b>Sipariş</b><small>Ürün + kg + üretici</small></div>
+              <div class="flowstep"><span>02</span><b>YZ karar</b><small>Fiyat + görev + risk</small></div>
+              <div class="flowstep"><span>03</span><b>Hasat</b><small>Toplama + görsel</small></div>
+              <div class="flowstep"><span>04</span><b>Onay</b><small>Vatandaş kalite kapısı</small></div>
+              <div class="flowstep"><span>05</span><b>Görevler</b><small>Hub + uçuş planı</small></div>
+              <div class="flowstep"><span>06</span><b>Teslimat</b><small>Rota + telemetri</small></div>
+              <div class="flowstep"><span>07</span><b>Mutabakat</b><small>Hakediş + kapanış</small></div>
+            </div>
+          </article>
+
+          <div class="evidence-grid">
+            <article class="evidence-card"><span class="eyebrow">PROBLEM</span><b>Çiftçi ucuza satıyor, vatandaş pahalıya alıyor.</b><small>Aracı zinciri hem fiyatı büyütüyor hem tazeliği azaltıyor.</small></article>
+            <article class="evidence-card"><span class="eyebrow">FARK</span><b>Bir pazar yeri değil, operasyon altyapısı.</b><small>Fiyat, görev, ödeme ve lojistik tek orkestrasyon çekirdeğinde.</small></article>
+            <article class="evidence-card"><span class="eyebrow">PİLOT KANITI</span><b>Ölçülebilir saha doğrulaması.</b><small>Üretici net geliri, tüketici maliyeti, teslim süresi ve ürün kaybı.</small></article>
+          </div>
         </div>
       </section>
 
       <section class="screen" data-screen="market">
-        <div class="screen-head"><div><span class="kicker">CONSUMER EXPERIENCE</span><h2>Ürünü keşfet, kaynağını gör, sepete ekle.</h2></div><button class="icon-button" id="refreshPrices">↻</button></div>
-        <div class="market-layout"><aside class="category-rail" id="categoryRail"><button class="active" data-cat="all">Tümü</button><button data-cat="Sebze">Sebze</button><button data-cat="Meyve">Meyve</button><button data-cat="Tahıl">Tahıl</button><button data-cat="Bakliyat">Bakliyat</button><button data-cat="Doğal Ürün">Doğal</button></aside><div class="catalog-area"><div class="catalog-top"><div><b id="catalogTitle">Tüm ürünler</b><small id="catalogCount">0 ürün</small></div><input id="searchInput" placeholder="Ürün ara" /></div><div class="product-grid" id="productGrid"></div></div></div>
-        <article class="selection-bar" id="selectionBar"><img id="selectionImage" alt="Seçili ürün"><div><span>SEÇİLİ ÜRÜN</span><b id="selectionName">—</b><small id="selectionMeta">—</small></div><strong id="selectionPrice">—</strong><button class="btn primary" id="openPassport">Ürün pasaportu</button></article>
+        <div class="screen-head">
+          <div><span class="eyebrow">CONSUMER EXPERIENCE</span><h2>Ürünü keşfet, kaynağını gör, sepete ekle.</h2></div>
+          <button class="icon-btn" id="refreshPrices" title="Fiyatları yenile">↻</button>
+        </div>
+        <div class="market-toolbar surface">
+          <div class="category-tabs" id="categoryTabs">
+            <button class="active" data-category="all">Tümü</button>
+            <button data-category="Sebze">Sebze</button>
+            <button data-category="Meyve">Meyve</button>
+            <button data-category="Tahıl">Tahıl</button>
+            <button data-category="Bakliyat">Bakliyat</button>
+            <button data-category="Doğal Ürün">Doğal</button>
+          </div>
+          <input id="productSearch" placeholder="Ürün ara…" autocomplete="off" />
+        </div>
+        <div class="market-meta"><b id="marketTitle">Tüm ürünler</b><small id="marketCount">0 ürün</small></div>
+        <div class="product-grid" id="productGrid"></div>
+        <article class="selection-dock surface" id="selectionDock">
+          <img id="selectedImage" alt="Seçili ürün" />
+          <div><span>SEÇİLİ ÜRÜN</span><b id="selectedName">—</b><small id="selectedMeta">—</small></div>
+          <strong id="selectedPrice">—</strong>
+          <button class="btn primary" id="openPassport">Ürün pasaportu</button>
+        </article>
       </section>
 
-      <section class="screen" data-screen="cart"><div class="screen-head"><div><span class="kicker">SECURE CHECKOUT</span><h2>Sepet ve güvenli ödeme kaydı</h2></div><span class="counter" id="cartCounter">0 ürün</span></div><div class="cart-layout"><div class="cart-list panel" id="cartList"></div><aside class="checkout panel"><div class="checkout-row"><span>Sepet toplamı</span><b id="cartTotal">0,00 ₺</b></div><div class="security-note"><i>✓</i><div><b>Kontrollü ödeme akışı</b><small>Bu prototip gerçek kart bilgisi toplamaz. Ödeme kuruluşu entegrasyonu bağlanana kadar güvenli ödeme simülasyonu kullanılır.</small></div></div><button class="btn primary wide" id="createPayment">Güvenli ödeme kaydı oluştur</button><button class="btn ghost wide" id="launchOrder" disabled>Siparişi başlat</button><div class="checkout-state" id="paymentState">Henüz ödeme kaydı yok</div></aside></div></section>
+      <section class="screen" data-screen="cart">
+        <div class="screen-head"><div><span class="eyebrow">SECURE CHECKOUT</span><h2>Sepet ve güvenli ödeme simülasyonu</h2></div><span class="count-badge" id="cartCountTop">0 ürün</span></div>
+        <div class="cart-layout">
+          <article class="cart-list surface" id="cartList"></article>
+          <aside class="checkout surface">
+            <div class="checkout-total"><span>Sepet toplamı</span><b id="cartTotal">0,00 ₺</b></div>
+            <div class="checkout-line"><span>Üretici toplam hakedişi</span><b id="farmerTotal">0,00 ₺</b></div>
+            <div class="secure-note"><i>✓</i><div><b>Güvenli ödeme akışı</b><small>Gerçek kart bilgisi toplanmaz. Jüri testinde ödeme, bekleme hesabı mantığını simüle eder.</small></div></div>
+            <div class="payment-record" id="paymentRecord"><span>ÖDEME KAYDI</span><b>Henüz oluşturulmadı</b><small>Siparişi başlatmak için güvenli ödeme kaydı oluşturun.</small></div>
+            <button class="btn primary wide" id="createPayment">Güvenli ödeme kaydı oluştur</button>
+            <button class="btn secondary wide" id="startOperation" disabled>Operasyonu başlat</button>
+          </aside>
+        </div>
+      </section>
 
-      <section class="screen" data-screen="order"><div class="screen-head"><div><span class="kicker">ORDER ORCHESTRATION</span><h2 id="orderHeading">Henüz aktif sipariş yok</h2></div><span class="counter" id="orderCode">—</span></div><div class="order-console"><article class="order-summary panel"><div class="order-product"><img id="orderImg" alt=""><div><span>ÜRÜN</span><b id="orderProduct">—</b><small id="orderMeta">Sepetten sipariş başlatın.</small></div></div><div class="progress"><i id="orderProgress"></i></div><div class="order-now"><span>ŞU AN</span><b id="orderNowTitle">Beklemede</b><small id="orderNowText">Sipariş oluştuğunda karar motoru burada ilerler.</small></div></article><article class="timeline panel" id="timeline"></article></div></section>
+      <section class="screen" data-screen="operations">
+        <div class="screen-head"><div><span class="eyebrow">MISSION CONTROL</span><h2>Sipariş, görev, rota ve mutabakat</h2></div><span class="pilot-badge">SİMÜLASYON • GERÇEKÇİ AKIŞ</span></div>
+        <div class="ops-tabs" id="opsTabs">
+          <button class="active" data-ops="flow">Akış</button>
+          <button data-ops="missions">Görevler</button>
+          <button data-ops="live">Canlı rota</button>
+          <button data-ops="settlement">Mutabakat</button>
+        </div>
+        <div class="ops-pane active" data-ops-pane="flow">
+          <div class="ops-flow-layout">
+            <article class="order-summary surface"><div class="order-id"><span>SİPARİŞ</span><b id="orderId">—</b></div><div class="progress"><i id="orderProgress"></i></div><div class="current-stage"><span>ŞU AN</span><b id="currentStage">Görev bekleniyor</b><small id="currentStageText">Sepetten güvenli ödeme oluşturup operasyonu başlatın.</small></div></article>
+            <article class="timeline surface" id="timeline"></article>
+          </div>
+        </div>
+        <div class="ops-pane" data-ops-pane="missions">
+          <div class="mission-layout"><div class="mission-list" id="missionList"></div><article class="mission-detail surface" id="missionDetail"></article></div>
+        </div>
+        <div class="ops-pane" data-ops-pane="live">
+          <div class="live-layout">
+            <article class="map-card surface"><div id="routeMap"></div><div class="map-hud"><span>AKTİF GÖREV</span><b id="mapMission">—</b><span>ETA</span><b id="mapEta">—</b></div></article>
+            <aside class="telemetry surface"><div><span>İrtifa</span><b id="altitude">0 m</b></div><div><span>Hız</span><b id="speed">0 km/sa</b></div><div><span>Batarya</span><b id="battery">100%</b></div><div><span>Mesafe</span><b id="distance">—</b></div><div class="telemetry-state"><i></i><b id="flightState">Görev bekleniyor</b><small id="flightText">Operasyon başladığında seçili görevin rotası burada izlenir.</small></div></aside>
+            <article class="camera surface"><div class="camera-stage"><div class="camera-grid"></div><div class="crosshair">+</div><div class="camera-label"><i></i> DRONE CAM • DIGITAL TWIN</div><div class="camera-footer"><span id="camGps">GPS —</span><span id="camClock">00:00:00</span></div></div><small>Gerçek FPV/video bağlantısı bağlandığında dijital ikiz otomatik olarak canlı yayınla değiştirilir.</small></article>
+          </div>
+        </div>
+        <div class="ops-pane" data-ops-pane="settlement">
+          <div class="settlement-grid" id="settlementGrid"></div>
+        </div>
+      </section>
 
-      <section class="screen" data-screen="live"><div class="screen-head"><div><span class="kicker">LIVE OPERATIONS</span><h2>Drone rota, telemetri ve kamera</h2></div><span class="pilot-badge">PİLOT SİMÜLASYON</span></div><div class="live-layout"><article class="map-card panel"><div id="routeMap"></div><div class="map-top"><span>DRONE</span><b id="droneId">TT-D01</b><span>ETA</span><b id="eta">—</b></div></article><aside class="telemetry panel"><div><span>İrtifa</span><b id="altitude">0 m</b></div><div><span>Hız</span><b id="speed">0 km/sa</b></div><div><span>Batarya</span><b id="battery">100%</b></div><div><span>Mesafe</span><b id="distance">—</b></div><div class="telemetry-status"><i></i><b id="flightState">Görev bekleniyor</b><small id="flightText">Aktif sipariş oluştuğunda rota burada izlenir.</small></div></aside><article class="camera-card panel"><div class="camera-viewport"><div class="camera-grid"></div><div class="camera-center">+</div><div class="camera-label"><i></i> DRONE CAM • DIGITAL TWIN</div><div class="camera-bottom"><span id="camGps">GPS —</span><span id="camClock">00:00:00</span></div></div><p>Gerçek FPV/video bağlantısı bağlandığında bu dijital ikiz alanı canlı yayınla değiştirilir; şu an canlıymış gibi gösterilmez.</p></article></div></section>
-
-      <section class="screen" data-screen="project"><div class="screen-head"><div><span class="kicker">PROJECT / COMPETITION VIEW</span><h2>Projenin teknolojik mimarisi ve değer önerisi</h2></div><span class="counter">TT CORE</span></div><div class="project-tabs" id="projectTabs"><button class="active" data-pane="value">Değer</button><button data-pane="citizen">Vatandaş</button><button data-pane="farmer">Çiftçi</button><button data-pane="system">Sistem</button><button data-pane="ops">Merkez</button></div><div class="project-content panel" id="projectContent"></div></section>
+      <section class="screen" data-screen="project">
+        <div class="screen-head"><div><span class="eyebrow">PROJECT / COMPETITION VIEW</span><h2>Teknolojik mimari, değer ve pilot kanıt planı</h2></div><span class="count-badge">TT CORE</span></div>
+        <div class="project-tabs" id="projectTabs">
+          <button class="active" data-project="value">Değer</button>
+          <button data-project="citizen">Vatandaş</button>
+          <button data-project="farmer">Çiftçi</button>
+          <button data-project="system">Sistem</button>
+          <button data-project="ops">Merkez</button>
+          <button data-project="pilot">Pilot</button>
+        </div>
+        <article class="project-content surface" id="projectContent"></article>
+      </section>
     </main>
 
-    <nav class="bottomnav"><button class="active" data-nav="overview"><span>◫</span><b>Genel</b></button><button data-nav="market"><span>▦</span><b>Pazar</b></button><button data-nav="cart"><span>▤</span><b>Sepet</b><em id="cartBadge">0</em></button><button data-nav="order"><span>▣</span><b>Sipariş</b></button><button data-nav="live"><span>⌖</span><b>Canlı</b></button><button data-nav="project"><span>◎</span><b>Proje</b></button></nav>
+    <nav class="bottomnav">
+      <button class="active" data-nav="overview"><span>◫</span><b>Genel</b></button>
+      <button data-nav="market"><span>▦</span><b>Pazar</b></button>
+      <button data-nav="cart"><span>▤</span><b>Sepet</b><em id="cartBadge">0</em></button>
+      <button data-nav="operations"><span>⌖</span><b>Operasyon</b></button>
+      <button data-nav="project"><span>◎</span><b>Proje</b></button>
+    </nav>
   </div>
 
-  <section class="passport" id="passport" aria-hidden="true"><div class="passport-card"><button class="passport-close" id="closePassport">×</button><div class="passport-head"><img id="passportThumb" alt=""><div><span>ÜRÜN PASAPORTU</span><h3 id="passportName">—</h3><small id="passportMeta">—</small></div></div><div class="passport-tabs" id="passportTabs"><button class="active" data-tab="varieties">Çeşitler</button><button data-tab="vine">Dalında</button><button data-tab="field">Bahçede</button><button data-tab="harvest">Hasat</button><button data-tab="crate">Kasada</button><button data-tab="stock">Tonaj</button></div><div class="passport-body" id="passportBody"></div><div class="passport-footer"><div class="qty"><button id="qtyMinus">−</button><b id="qtyValue">5 kg</b><button id="qtyPlus">+</button></div><button class="btn primary" id="addToCart">Sepete ekle</button></div></div></section>
+  <section class="passport" id="passport" aria-hidden="true">
+    <div class="passport-card">
+      <button class="passport-close" id="closePassport">×</button>
+      <div class="passport-head"><img id="passportThumb" alt=""><div><span>ÜRÜN PASAPORTU</span><h3 id="passportName">—</h3><small id="passportMeta">—</small></div></div>
+      <div class="passport-tabs" id="passportTabs">
+        <button class="active" data-passport="varieties">Çeşitler</button>
+        <button data-passport="vine">Dalında</button>
+        <button data-passport="field">Bahçede</button>
+        <button data-passport="harvest">Hasat</button>
+        <button data-passport="crate">Kasada</button>
+        <button data-passport="stock">Tonaj</button>
+      </div>
+      <div class="passport-body" id="passportBody"></div>
+      <div class="passport-footer"><div class="qty"><button id="qtyMinus">−</button><b id="qtyValue">5 kg</b><button id="qtyPlus">+</button></div><button class="btn primary" id="addToCart">Sepete ekle</button></div>
+    </div>
+  </section>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-  <script src="competition.js?v=20260818c"></script>
+  <script src="competition.js?v=20260819-final"></script>
 </body>
 </html>
