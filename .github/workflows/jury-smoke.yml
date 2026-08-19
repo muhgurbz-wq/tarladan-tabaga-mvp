@@ -8,6 +8,7 @@ on:
       - 'competition.css'
       - 'competition.js'
       - 'scripts/jury-smoke-test.mjs'
+      - 'scripts/jury-network-test.mjs'
       - '.github/workflows/jury-smoke.yml'
   workflow_dispatch:
 
@@ -26,34 +27,52 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: JavaScript syntax
-        run: node --check competition.js
-      - name: Jury smoke test
-        run: node scripts/jury-smoke-test.mjs | tee jury-smoke.log
-      - name: Write PASS evidence
+      - name: Run jury gates and build evidence
+        id: tests
+        shell: bash
         run: |
+          set +e
+          node --check competition.js > syntax.log 2>&1
+          SYNTAX=$?
+          node scripts/jury-smoke-test.mjs > smoke.log 2>&1
+          SMOKE=$?
+          node scripts/jury-network-test.mjs > network.log 2>&1
+          NETWORK=$?
+          cat syntax.log
+          cat smoke.log
+          cat network.log
+          export SYNTAX SMOKE NETWORK
           node - <<'NODE'
           const fs=require('fs');
-          const out=fs.readFileSync('jury-smoke.log','utf8').trim();
+          const code=n=>Number(process.env[n]||1);
+          const gates={syntax:code('SYNTAX')===0,smoke:code('SMOKE')===0,network_assets:code('NETWORK')===0};
+          const status=Object.values(gates).every(Boolean)?'PASS':'FAIL';
           const report={
-            schema_version:1,
-            status:'PASS',
+            schema_version:2,
+            status,
             tested_commit:process.env.GITHUB_SHA,
             tested_at:new Date().toISOString(),
             node:process.version,
-            checks:out.split('\n'),
-            note:'Generated only after JavaScript syntax and jury smoke test both succeed.'
+            gates,
+            syntax_output:fs.readFileSync('syntax.log','utf8').trim().split('\n').filter(Boolean),
+            smoke_output:fs.readFileSync('smoke.log','utf8').trim().split('\n').filter(Boolean),
+            network_output:fs.readFileSync('network.log','utf8').trim().split('\n').filter(Boolean),
+            note:'Jury evidence is committed on PASS or FAIL; final workflow gate fails if any check fails.'
           };
           fs.mkdirSync('data',{recursive:true});
           fs.writeFileSync('data/jury-test-status.json',JSON.stringify(report,null,2)+'\n');
+          fs.appendFileSync(process.env.GITHUB_OUTPUT,`overall=${status}\n`);
           NODE
-          rm -f jury-smoke.log
-      - name: Commit PASS evidence
+          rm -f syntax.log smoke.log network.log
+          exit 0
+      - name: Commit jury evidence
         run: |
           git config user.name 'tt-jury-bot'
           git config user.email 'actions@users.noreply.github.com'
           git add data/jury-test-status.json
           git diff --cached --quiet && exit 0
-          git commit -m 'test: record jury smoke PASS evidence'
+          git commit -m 'test: record jury validation evidence'
           git pull --rebase origin main
           git push origin HEAD:main
+      - name: Final jury gate
+        run: test "${{ steps.tests.outputs.overall }}" = "PASS"
