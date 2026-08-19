@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "tested_commit": "374a58bfaf6311a2105ad6d4deac618a686af3ed",
+  "tested_at": "2026-08-19T12:02:51.014Z",
+  "node": "v20.20.2",
+  "checks": [
+    "JURY_SMOKE_PASS",
+    "checks=core-ui,48-products,5-nav,passport,manual-approval,simulation-labels,multi-producer,regional-route,payment,settlement,mobile"
+  ],
+  "note": "Generated only after JavaScript syntax and jury smoke test both succeed."
+}
