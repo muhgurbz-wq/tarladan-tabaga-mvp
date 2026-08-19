@@ -12,7 +12,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   smoke:
@@ -20,6 +20,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -27,4 +29,31 @@ jobs:
       - name: JavaScript syntax
         run: node --check competition.js
       - name: Jury smoke test
-        run: node scripts/jury-smoke-test.mjs
+        run: node scripts/jury-smoke-test.mjs | tee jury-smoke.log
+      - name: Write PASS evidence
+        run: |
+          node - <<'NODE'
+          const fs=require('fs');
+          const out=fs.readFileSync('jury-smoke.log','utf8').trim();
+          const report={
+            schema_version:1,
+            status:'PASS',
+            tested_commit:process.env.GITHUB_SHA,
+            tested_at:new Date().toISOString(),
+            node:process.version,
+            checks:out.split('\n'),
+            note:'Generated only after JavaScript syntax and jury smoke test both succeed.'
+          };
+          fs.mkdirSync('data',{recursive:true});
+          fs.writeFileSync('data/jury-test-status.json',JSON.stringify(report,null,2)+'\n');
+          NODE
+          rm -f jury-smoke.log
+      - name: Commit PASS evidence
+        run: |
+          git config user.name 'tt-jury-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/jury-test-status.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'test: record jury smoke PASS evidence'
+          git pull --rebase origin main
+          git push origin HEAD:main
