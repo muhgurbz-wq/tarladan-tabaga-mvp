@@ -1,0 +1,30 @@
+name: Jury Smoke Test
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'index.html'
+      - 'competition.css'
+      - 'competition.js'
+      - 'scripts/jury-smoke-test.mjs'
+      - '.github/workflows/jury-smoke.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: JavaScript syntax
+        run: node --check competition.js
+      - name: Jury smoke test
+        run: node scripts/jury-smoke-test.mjs
