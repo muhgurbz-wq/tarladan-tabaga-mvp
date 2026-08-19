@@ -57,10 +57,13 @@ Bu statik MVP gerçek kart bilgisi toplamaz. Jüri testinde güvenli ödeme kayd
 1. Sepet oluşturulur.
 2. Güvenli bekleme kaydı oluşturulur.
 3. Sipariş/üretici görevleri oluşur.
-4. Görsel onay tamamlanır.
-5. Drone kalkışı doğrulanır.
-6. Üretici hakedişi serbest bırakılır.
-7. Teslimat tamamlanınca sipariş kapanır.
+4. Görsel doğrulama aşamasında otomatik akış durur.
+5. Jüri/vatandaş **Fotoğrafları onayla** düğmesiyle kalite kapısını manuel geçirir.
+6. Paketleme ve drone görevi doğrulanır.
+7. Drone kalkışıyla üretici hakedişi serbest bırakılır.
+8. Teslimat tamamlanınca sipariş kapanır.
+
+Operasyon ekranında **Sonraki adım** ve **Otomatik: açık/kapalı** kontrolleri vardır; böylece jüri akışı beklemeden adım adım test edebilir.
 
 ## Jüri demosu
 
@@ -70,11 +73,11 @@ Ana ekrandaki **“Jüri demosunu başlat”** butonu üç farklı üreticiden �
 - Elma — Niğde
 - Nohut — Kırşehir
 
-Bu akış; ödeme, görev planlama, uçuş sayısı, bölgesel rota, telemetri ve mutabakat ekranlarının birlikte test edilmesini sağlar.
+Bu akış; ödeme, görev planlama, uçuş sayısı, bölgesel rota, telemetri, manuel foto onayı ve mutabakat ekranlarının birlikte test edilmesini sağlar.
 
 ## Self-test
 
-Uygulama açıldığında istemci tarafında 12 maddelik self-test çalışır. Üst durum alanında `Self-test 12/12 PASS` görülmesi beklenir.
+Uygulama açıldığında istemci tarafında **13 maddelik self-test** çalışır. Üst durum alanında `Self-test 13/13 PASS` görülmesi beklenir.
 
 Ayrıca GitHub Actions üzerinde otomatik smoke test vardır:
 
@@ -95,6 +98,7 @@ Smoke test şu kapıları kontrol eder:
 - tüm ürün şehirleri için bölgesel koordinat desteği,
 - çoklu üretici görev motoru,
 - güvenli ödeme simülasyonu,
+- manuel görsel onay / adım kontrolü,
 - drone rota katmanı,
 - mutabakat ve jüri demo modu.
 
