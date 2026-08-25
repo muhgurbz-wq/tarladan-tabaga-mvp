@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-08-24T21:46:27Z",
+  "generated_at": "2026-08-25T01:54:43Z",
   "pricing_rule": {
     "name": "Tarladan Tabağa YZ Fiyat Politikası",
     "farmer_sets_price": false,
@@ -21,10 +21,10 @@
       "data_date": "2026-08-25"
     },
     "tobb": {
-      "ok": false,
+      "ok": true,
       "name": "TOBB Ticaret Borsaları Ürün Fiyat Bilgileri",
       "url": "https://borsa.tobb.org.tr/",
-      "error": "HTTPSConnectionPool(host='borsa.tobb.org.tr', port=443): Max retries exceeded with url: /fiyat_urun3.php?alt_kod=801&ana_kod=9 (Caused by ConnectTimeoutError(<HTTPSConnection(host='borsa.tobb.org.tr', port=443) at 0x7fd136aaa360>, 'Connecti"
+      "data_date": "2026-07-07"
     }
   },
   "products": {
