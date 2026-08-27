@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-08-27T00:50:27Z",
+  "generated_at": "2026-08-27T14:17:01Z",
   "pricing_rule": {
     "name": "Tarladan Tabağa YZ Fiyat Politikası",
     "farmer_sets_price": false,
@@ -24,7 +24,7 @@
       "ok": false,
       "name": "TOBB Ticaret Borsaları Ürün Fiyat Bilgileri",
       "url": "https://borsa.tobb.org.tr/",
-      "error": "HTTPSConnectionPool(host='borsa.tobb.org.tr', port=443): Max retries exceeded with url: /fiyat_urun3.php?alt_kod=801&ana_kod=9 (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: cert"
+      "error": "HTTPSConnectionPool(host='borsa.tobb.org.tr', port=443): Max retries exceeded with url: /fiyat_urun3.php?alt_kod=801&ana_kod=9 (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unab"
     }
   },
   "products": {
