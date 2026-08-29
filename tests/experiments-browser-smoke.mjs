@@ -1,67 +1,18 @@
 import { chromium } from 'playwright';
 import fs from 'node:fs';
-
 const browser=await chromium.launch({headless:true});
 const context=await browser.newContext({viewport:{width:1280,height:900},acceptDownloads:true});
 const page=await context.newPage();
 const base='http://127.0.0.1:4173/experiments/';
 const log=n=>console.log('PASS  '+n);
-
 await page.goto(base,{waitUntil:'networkidle'});
-if(await page.locator('.card').count()!==20) throw new Error('20 ürün kartı bulunamadı');
-log('20 ürün kartı masaüstünde açıldı');
-
-await page.locator('.card').first().click();
-await page.locator('#f1').fill('ABC Ltd.');
-await page.locator('#f2').fill('Web danışmanlığı');
-await page.locator('#f3').fill('25.000 TL');
-await page.getByRole('button',{name:'Profesyonel çıktıyı oluştur'}).click();
-const out=await page.locator('#out').innerText();
-if(!out.includes('ABC Ltd.')||!out.includes('25.000 TL')) throw new Error('Çalışma alanı çıktı üretmedi');
-log('Ürün çalışma alanı gerçek veriyle çıktı üretti');
-
-await page.getByRole('button',{name:'Detaylar'}).click();
-await page.locator('.accHead').first().click();
-if(!(await page.locator('.accordion').first().evaluate(el=>el.classList.contains('open')))) throw new Error('Detay akordiyonu açılmadı');
-log('Derin detay başlıkları açılıp kapatılabiliyor');
-
-await page.getByRole('button',{name:'Çalışma Alanı'}).click();
-const downloadPromise=page.waitForEvent('download');
-await page.getByRole('button',{name:'Dosya indir'}).click();
-const download=await downloadPromise;
-const path=await download.path();
-if(!path||fs.statSync(path).size<20) throw new Error('İndirilen çıktı boş');
-log('Dosya indirme boş olmayan gerçek dosya üretti');
-
-const downloadPromise2=page.waitForEvent('download');
-await page.getByRole('button',{name:'Dosya indir'}).click();
-const download2=await downloadPromise2;
-const path2=await download2.path();
-if(!path2||fs.statSync(path2).size<20) throw new Error('İkinci indirme başarısız');
-log('Aynı ürün tekrar tekrar indirilebiliyor');
-
-await page.getByRole('button',{name:'Kurulum'}).click();
-for(const t of ['Android','iPhone / iPad','Windows / macOS']) if(!(await page.locator('.choice').filter({hasText:t}).count())) throw new Error(t+' kurulum bilgisi eksik');
-log('Telefon ve bilgisayar kurulum ekranları mevcut');
-
-await page.goto(base,{waitUntil:'networkidle'});
-await page.evaluate(()=>navigator.serviceWorker.ready);
-await page.waitForTimeout(500);
-await context.setOffline(true);
-await page.reload({waitUntil:'domcontentloaded'});
-if(await page.locator('.card').count()!==20) throw new Error('Offline/kurulu uygulama içeriği boş açıldı');
-log('Service worker sonrası çevrimdışı açılışta içerik boş kalmıyor');
-await context.setOffline(false);
-
-const mobile=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
-const m=await mobile.newPage();
-await m.goto(base,{waitUntil:'networkidle'});
-if(await m.locator('.card').count()!==20) throw new Error('Mobil görünümde ürünler yüklenmedi');
-await m.locator('.card').first().click();
-if(!(await m.locator('#f1').isVisible())) throw new Error('Mobil ürün çalışma alanı görünmüyor');
-log('Mobil görünümde ürün ve çalışma alanı açılıyor');
-
-await mobile.close();
-await context.close();
-await browser.close();
-console.log('PASS  browser smoke suite tamamlandı');
+if(await page.locator('.card').count()!==20)throw new Error('20 ürün kartı bulunamadı');log('20 ürün kartı açıldı');
+await page.locator('.card').nth(1).click();
+for(const tab of ['Çalışma Alanı','Detaylar','Kurulum','Erişim']){await page.getByRole('button',{name:tab}).click();const id=tab==='Çalışma Alanı'?'work':tab==='Detaylar'?'details':tab==='Kurulum'?'install':'request';if(!(await page.locator('#'+id).evaluate(el=>el.classList.contains('active'))))throw new Error(tab+' açılmadı');}log('Dört ana seçenek gerçek panel açıyor');
+await page.getByRole('button',{name:'Çalışma Alanı'}).click();await page.locator('#f1').fill('ABC Marka');await page.locator('#f2').fill('Perakende');await page.locator('#f3').fill('Yeni müşteriler');await page.getByRole('button',{name:'Profesyonel çıktıyı oluştur'}).click();const out=await page.locator('#out').innerText();if(!out.includes('ABC Marka')||!out.includes('Yeni müşteriler'))throw new Error('Çıktı üretmedi');log('Gerçek veriyle çıktı üretildi');
+await page.getByRole('button',{name:'Detaylar'}).click();await page.locator('.accHead').first().click();if(!(await page.locator('.accordion').first().evaluate(el=>el.classList.contains('open'))))throw new Error('Detay açılmadı');log('Derin detay açılır-kapanır çalışıyor');
+await page.getByRole('button',{name:'Çalışma Alanı'}).click();for(let i=0;i<2;i++){const dp=page.waitForEvent('download');await page.getByRole('button',{name:'Dosya indir'}).click();const d=await dp;const p=await d.path();if(!p||fs.statSync(p).size<30)throw new Error('İndirme '+(i+1)+' boş');}log('Tekrarlı dosya indirme çalışıyor ve dosya dolu');
+await page.getByRole('button',{name:'Kurulum'}).click();for(const t of ['Android','iPhone / iPad','Windows / macOS'])if(!(await page.locator('.installCard').filter({hasText:t}).count()))throw new Error(t+' eksik');log('Telefon ve bilgisayar kurulum kartları mevcut');
+await page.getByRole('button',{name:'Bu cihaza kur'}).first().click();if(!(await page.locator('#installModal').evaluate(el=>el.classList.contains('show'))))throw new Error('Kurulum modalı açılmadı');if(!(await page.locator('#installText').innerText()).trim())throw new Error('Kurulum geri bildirimi boş');log('Kur düğmesi sessiz kalmıyor; kurulum ekranı açıyor');await page.getByRole('button',{name:'Kapat'}).click();
+await page.goto(base,{waitUntil:'networkidle'});await page.evaluate(()=>navigator.serviceWorker.ready);await page.waitForTimeout(400);await context.setOffline(true);await page.reload({waitUntil:'domcontentloaded'});if(await page.locator('.card').count()!==20)throw new Error('Offline içerik boş');log('Çevrimdışı açılışta içerik boş kalmıyor');await context.setOffline(false);
+const mobile=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true,acceptDownloads:true,userAgent:'Mozilla/5.0 (Linux; Android 12; Mobile) AppleWebKit/537.36 Chrome/140 Mobile Safari/537.36'});const m=await mobile.newPage();await m.goto(base,{waitUntil:'networkidle'});await m.locator('.card').nth(1).click();await m.getByRole('button',{name:'Detaylar'}).click();if(!(await m.locator('#details').isVisible()))throw new Error('Mobil detay görünmüyor');await m.getByRole('button',{name:'Kurulum'}).click();await m.getByRole('button',{name:'Bu cihaza kur'}).first().click();if(!(await m.locator('#installModal').isVisible()))throw new Error('Mobil kurulum ekranı açılmıyor');const txt=await m.locator('#installText').innerText();if(!txt.includes('tarayıcı')&&!txt.includes('Kurulum'))throw new Error('Mobil kurulum yönlendirmesi yok');log('Mobilde detay ve kurulum etkileşimi çalışıyor');await mobile.close();await context.close();await browser.close();console.log('PASS  browser smoke suite tamamlandı');
