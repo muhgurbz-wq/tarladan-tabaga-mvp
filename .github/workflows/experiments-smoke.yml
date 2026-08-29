@@ -1,0 +1,21 @@
+name: Experiments Smoke Tests
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'experiments/**'
+      - 'tests/experiments-smoke.mjs'
+      - '.github/workflows/experiments-smoke.yml'
+  workflow_dispatch:
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run PWA and product checks
+        run: node tests/experiments-smoke.mjs
