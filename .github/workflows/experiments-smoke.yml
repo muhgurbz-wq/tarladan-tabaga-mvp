@@ -5,6 +5,7 @@ on:
     paths:
       - 'experiments/**'
       - 'tests/experiments-smoke.mjs'
+      - 'tests/experiments-browser-smoke.mjs'
       - '.github/workflows/experiments-smoke.yml'
   workflow_dispatch:
 jobs:
@@ -17,5 +18,15 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Run PWA and product checks
+      - name: Run static PWA and product checks
         run: node tests/experiments-smoke.mjs
+      - name: Install Playwright Chromium
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Start local site
+        run: |
+          python3 -m http.server 4173 >/tmp/experiments-http.log 2>&1 &
+          sleep 2
+      - name: Run real browser smoke tests
+        run: node tests/experiments-browser-smoke.mjs
