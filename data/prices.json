@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-08-30T16:44:26Z",
+  "generated_at": "2026-08-30T21:10:55Z",
   "pricing_rule": {
     "name": "Tarladan Tabağa YZ Fiyat Politikası",
     "farmer_sets_price": false,
@@ -18,7 +18,7 @@
       "ok": true,
       "name": "T.C. Ticaret Bakanlığı Hal Kayıt Sistemi",
       "url": "https://www.hal.gov.tr/Sayfalar/FiyatDetaylari.aspx",
-      "data_date": "2026-08-30"
+      "data_date": "2026-08-31"
     },
     "tobb": {
       "ok": false,
@@ -29,28 +29,28 @@
   },
   "products": {
     "domates": {
-      "official_avg": 14.82,
+      "official_avg": 14.01,
       "unit": "kg",
       "source": "hks",
       "source_name": "Ticaret Bakanlığı HKS",
       "source_product": "DOMATES / DİĞER",
-      "data_date": "2026-08-30"
+      "data_date": "2026-08-31"
     },
     "kapya_biber": {
-      "official_avg": 20.05,
+      "official_avg": 17.41,
       "unit": "kg",
       "source": "hks",
       "source_name": "Ticaret Bakanlığı HKS",
       "source_product": "BİBER SALÇALIK (KAPYA)",
-      "data_date": "2026-08-30"
+      "data_date": "2026-08-31"
     },
     "elma": {
-      "official_avg": 23.55,
+      "official_avg": 18.23,
       "unit": "kg",
       "source": "hks",
       "source_name": "Ticaret Bakanlığı HKS",
       "source_product": "ELMA / DİĞER",
-      "data_date": "2026-08-30"
+      "data_date": "2026-08-31"
     },
     "ceviz": {
       "official_avg": 280.0,
