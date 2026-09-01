@@ -1,0 +1,39 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.cozummerkezi.sosyalpaket'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId 'com.cozummerkezi.sosyalpaket'
+        minSdk 24
+        targetSdk 35
+        versionCode 1
+        versionName '1.0.0'
+    }
+
+    buildTypes {
+        debug {
+            debuggable true
+        }
+        release {
+            minifyEnabled false
+        }
+    }
+}
+
+tasks.register('syncWebAssets', Copy) {
+    from(rootProject.file('../../experiments/apps/sosyalpaket')) {
+        include 'index.html'
+        include 'style.css'
+        include 'app.js'
+        include 'icon.svg'
+    }
+    into(project.file('src/main/assets/www'))
+}
+
+tasks.named('preBuild').configure {
+    dependsOn tasks.named('syncWebAssets')
+}
