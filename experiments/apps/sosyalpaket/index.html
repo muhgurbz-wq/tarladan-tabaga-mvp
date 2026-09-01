@@ -2,30 +2,77 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0f3b82">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#0b1220">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg">
 <link rel="stylesheet" href="style.css">
 <title>SosyalPaket</title>
 </head>
 <body>
-<div class="app">
-<header class="top"><div class="brand"><img src="icon.svg" alt=""><b>SosyalPaket</b><span class="badge">Çalışan uygulama</span></div><div class="actions"><button class="btn secondary" onclick="location.href='../../'">Çözüm Merkezi</button><button id="installBtn" class="btn primary" onclick="openInstaller()">Güvenli kur</button></div></header>
-<div class="layout">
-<aside class="side" id="sideNav"></aside>
-<main class="main">
-<section id="dashboard" class="view on"></section>
-<section id="setup" class="view"></section>
-<section id="calendarView" class="view"></section>
-<section id="library" class="view"></section>
-<section id="analytics" class="view"></section>
-<section id="settings" class="view"></section>
-</main>
+<div id="splash" class="splash">
+  <div class="splashLogo"><img src="icon.svg" alt=""></div>
+  <h1>SosyalPaket</h1>
+  <p>İçeriğini planla. Hazırla. Yayına çıkar.</p>
+  <div class="loader"><i></i></div>
 </div>
-<nav class="bottomnav" id="bottomNav"></nav>
+
+<section id="onboarding" class="onboarding hidden">
+  <div class="onboardTop">
+    <img src="icon.svg" alt="SosyalPaket">
+    <span>İlk kurulum</span>
+  </div>
+  <div class="onboardBody">
+    <div class="eyebrow">1 dakikada hazır</div>
+    <h1>Markanı tanıyalım.</h1>
+    <p class="muted">SosyalPaket içerik fikirlerini, metinleri ve takvimi bu bilgilere göre hazırlar.</p>
+    <div class="formStack">
+      <label>İşletme / marka<input id="obBrand" placeholder="Örn. Maraş Kahve" autocomplete="organization"></label>
+      <label>Sektör<input id="obSector" placeholder="Örn. Kafe, tekstil, emlak"></label>
+      <label>Hedef müşteri<input id="obAudience" placeholder="Örn. 20–40 yaş şehir içi müşteriler"></label>
+      <label>Ana hedef<select id="obGoal"><option>Etkileşim</option><option>Satış</option><option>Marka bilinirliği</option><option>Mağaza ziyareti</option><option>Takipçi büyümesi</option></select></label>
+      <div><span class="fieldTitle">Kullanacağın kanallar</span><div id="obPlatforms" class="chipRow"></div></div>
+    </div>
+    <button class="primaryBtn wide" onclick="finishOnboarding()">Çalışma alanını oluştur</button>
+    <p class="privacyNote">Veriler bu cihazda tutulur. Hesap, ödeme veya sosyal ağ bağlantısı gerekmez.</p>
+  </div>
+</section>
+
+<div id="appShell" class="appShell hidden">
+  <header class="appbar">
+    <div class="appIdentity">
+      <img src="icon.svg" alt="">
+      <div><small id="brandLabel">SosyalPaket</small><strong id="screenTitle">Ana Sayfa</strong></div>
+    </div>
+    <button class="iconBtn" aria-label="Profil" onclick="showView('profile')"><span id="avatarInitial">S</span></button>
+  </header>
+
+  <main class="content">
+    <section id="home" class="view on"></section>
+    <section id="create" class="view"></section>
+    <section id="calendar" class="view"></section>
+    <section id="library" class="view"></section>
+    <section id="profile" class="view"></section>
+  </main>
+
+  <nav class="tabbar" id="tabbar">
+    <button data-view="home" class="on" onclick="showView('home')"><span>⌂</span><b>Ana Sayfa</b></button>
+    <button data-view="create" onclick="showView('create')"><span>＋</span><b>Oluştur</b></button>
+    <button data-view="calendar" onclick="showView('calendar')"><span>▦</span><b>Takvim</b></button>
+    <button data-view="library" onclick="showView('library')"><span>▤</span><b>İçerikler</b></button>
+    <button data-view="profile" onclick="showView('profile')"><span>●</span><b>Profil</b></button>
+  </nav>
 </div>
-<div id="editModal" class="modal"><div class="sheet"><div class="posttop"><h2>İçeriği düzenle</h2><button class="btn secondary" onclick="closeEdit()">Kapat</button></div><div id="editBody"></div></div></div>
+
+<input id="mediaInput" type="file" accept="image/*,video/*" hidden>
+
+<div id="postModal" class="modal" aria-hidden="true">
+  <div class="sheet">
+    <div class="sheetHead"><div><small>İçerik</small><h2>Düzenle</h2></div><button class="closeBtn" onclick="closePostModal()">×</button></div>
+    <div id="postModalBody"></div>
+  </div>
+</div>
+
 <div id="toast" class="toast"></div>
 <script src="app.js"></script>
 </body>
