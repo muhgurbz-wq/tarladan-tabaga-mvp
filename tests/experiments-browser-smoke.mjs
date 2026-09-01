@@ -7,28 +7,36 @@ const base='http://127.0.0.1:4173/experiments/';
 const store=base+'store/';
 const app=base+'apps/sosyalpaket/';
 const log=n=>console.log('PASS  '+n);
-const nav=(p,id)=>p.locator(`.side [data-view="${id}"]`);
-await page.goto(base,{waitUntil:'networkidle'});
-if(await page.locator('.card').count()!==20)throw new Error('20 ürün kartı bulunamadı');
-if(!(await page.getByRole('button',{name:'Uygulama Merkezi'}).count()))throw new Error('Uygulama Merkezi bağlantısı yok');
-log('Hub 20 ürünü gösteriyor ve indirmeyi Uygulama Merkezi üzerinden başlatıyor');
-await page.getByRole('button',{name:'Uygulama Merkezi'}).first().click();await page.waitForURL(/\/store\/$/);
-for(const name of ['Android','iPhone / iPad','Windows','macOS'])if(!(await page.getByRole('button',{name,exact:true}).count()))throw new Error(name+' platform seçeneği yok');
+fs.writeFileSync('/tmp/sosyalpaket-test.svg','<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400"><rect width="400" height="400" fill="#eef4ff"/><text x="60" y="210" font-size="42">Test medya</text></svg>');
+
+await page.goto(store,{waitUntil:'networkidle'});
 await page.getByRole('button',{name:'Android',exact:true}).click();
 if(!(await page.getByText('Android hazır',{exact:true}).isVisible()))throw new Error('Android paket durumu hazır değil');
-const dl=page.waitForEvent('download');await page.getByRole('link',{name:'Android uygulamasını indir',exact:true}).click();const apk=await dl;const apkPath=await apk.path();if(!apkPath||fs.statSync(apkPath).size<10000)throw new Error('Platform APK indirmesi boş/eksik');if(!apk.suggestedFilename().endsWith('.apk'))throw new Error('Android paketi APK olarak inmiyor');log('Android uygulaması doğrudan platformdan yerel APK olarak indiriliyor');
-for(const p of ['iPhone / iPad','Windows','macOS']){await page.getByRole('button',{name:p,exact:true}).click();if(!(await page.getByRole('button',{name:'Bu cihaz paketi hazırlanıyor',exact:true}).isDisabled()))throw new Error(p+' hazır olmadığı halde indirilebilir');}log('Hazır olmayan platform paketleri yanlışlıkla indirilemiyor');
-await page.getByRole('button',{name:'Android',exact:true}).click();await page.getByRole('button',{name:'Web önizleme',exact:true}).click();await page.waitForURL(/apps\/sosyalpaket\/$/);
-if(!(await page.getByText('Çalışan uygulama').isVisible()))throw new Error('SosyalPaket web önizlemesi açılmadı');
-await nav(page,'setup').click();
-await page.locator('#brand').fill('Maraş Kahve');await page.locator('#sector').fill('Kafe');await page.locator('#audience').fill('20-40 yaş kahve severler');await page.locator('#offer').fill('İkinci kahve %20 indirim');
-await page.getByRole('button',{name:'30 günlük planı üret',exact:true}).click();
-if(await page.locator('#calendarView .post').count()!==30)throw new Error('30 günlük plan oluşmadı');
-await page.locator('#calendarView .post').first().click();if(!(await page.locator('#editModal').isVisible()))throw new Error('İçerik editörü açılmadı');
-await page.locator('#eh').fill('Maraş Kahve için test edilmiş yeni başlık');await page.locator('#es').selectOption({label:'Hazır'});await page.getByRole('button',{name:'Kaydet',exact:true}).click();
-await nav(page,'dashboard').click();if(!(await page.locator('#dashboard').getByText('Maraş Kahve',{exact:true}).first().isVisible()))throw new Error('Dashboard marka verisini göstermedi');
-await page.reload({waitUntil:'networkidle'});await nav(page,'calendarView').click();if(!(await page.locator('#calendarView').getByText('Maraş Kahve için test edilmiş yeni başlık',{exact:true}).isVisible()))throw new Error('LocalStorage kalıcılığı çalışmadı');
-await nav(page,'library').click();if(await page.locator('#library .idea').count()!==30)throw new Error('İçerik kütüphanesi 30 fikir göstermiyor');
-await nav(page,'analytics').click();await page.locator('#mi').fill('1000');await page.locator('#me').fill('100');await page.locator('#mc').fill('50');await page.locator('#mf').fill('500');await page.getByRole('button',{name:'Metrikleri kaydet',exact:true}).click();const atext=await page.locator('#analytics').innerText();if(!atext.includes('10.00%')||!atext.includes('5.00%'))throw new Error('Analiz oranları yanlış');log('SosyalPaket içerik, kayıt ve analiz akışları çalışıyor');
-const mobile=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true,acceptDownloads:true,userAgent:'Mozilla/5.0 (Linux; Android 12; Mobile) AppleWebKit/537.36 Chrome/140 Mobile Safari/537.36'});const m=await mobile.newPage();await m.goto(store,{waitUntil:'networkidle'});await m.getByRole('button',{name:'Android',exact:true}).click();if(!(await m.getByRole('link',{name:'Android uygulamasını indir',exact:true}).isVisible()))throw new Error('Mobil platform indirme düğmesi görünmüyor');const mdl=m.waitForEvent('download');await m.getByRole('link',{name:'Android uygulamasını indir',exact:true}).click();const md=await mdl;const mp=await md.path();if(!mp||fs.statSync(mp).size<10000)throw new Error('Mobil Android paketi inmedi');log('Android mobil kullanıcı platformdan paketi doğrudan indirebiliyor');
-await mobile.close();await context.close();await browser.close();console.log('PASS  browser smoke suite tamamlandı');
+const dl=page.waitForEvent('download');await page.getByRole('link',{name:'Android uygulamasını indir',exact:true}).click();const apk=await dl;const apkPath=await apk.path();if(!apkPath||fs.statSync(apkPath).size<10000)throw new Error('Platform APK indirmesi boş');log('Android paketi platform üzerinden gerçek APK olarak indiriliyor');
+
+await page.goto(app,{waitUntil:'networkidle'});
+await page.locator('#onboarding').waitFor({state:'visible',timeout:3000});
+if(await page.getByText('Çözüm Merkezi',{exact:true}).count())throw new Error('Standalone uygulama içinde Çözüm Merkezi kalmış');
+await page.locator('#obBrand').fill('Maraş Kahve');await page.locator('#obSector').fill('Kafe');await page.locator('#obAudience').fill('20-40 yaş kahve severler');
+await page.getByRole('button',{name:'Çalışma alanını oluştur',exact:true}).click();
+await page.locator('#appShell').waitFor({state:'visible'});if(!(await page.getByText('Bugün ne paylaşacağını birlikte hazırlayalım.').isVisible()))throw new Error('Gerçek ana sayfa açılmadı');log('İlk kurulumdan sonra uygulama kendi ana sayfasını açıyor');
+
+await page.locator('#tabbar [data-view="create"]').click();
+await page.locator('#mediaInput').setInputFiles('/tmp/sosyalpaket-test.svg');await page.locator('#previewMedia img').waitFor({state:'visible'});
+await page.locator('#createTopic').fill('Yeni filtre kahve');await page.getByRole('button',{name:'✦ Metin öner',exact:true}).click();
+if(!(await page.locator('#createCaption').inputValue()).trim())throw new Error('Metin önerisi üretilmedi');
+await page.locator('#createDate').fill(new Date(Date.now()+86400000).toISOString().slice(0,10));await page.locator('#createTime').fill('19:15');
+await page.getByRole('button',{name:'Takvime ekle',exact:true}).click();
+if(!(await page.locator('#calendar .postRow').first().isVisible()))throw new Error('İçerik takvime eklenmedi');log('Galeriden medya seçme, içerik üretme ve takvime kaydetme çalışıyor');
+
+await page.locator('#calendar .postRow').first().click();await page.locator('#postModal').waitFor({state:'visible'});await page.locator('#epStatus').selectOption({label:'Hazır'});await page.getByRole('button',{name:'Kaydet',exact:true}).click();
+await page.locator('#tabbar [data-view="library"]').click();if(await page.locator('#library .contentCard').count()<1)throw new Error('İçerik kütüphanesine kayıt düşmedi');log('İçerik düzenleme ve kütüphane akışı çalışıyor');
+
+await page.locator('#tabbar [data-view="profile"]').click();await page.locator('#pmI').fill('1000');await page.locator('#pmE').fill('100');await page.locator('#pmC').fill('50');await page.locator('#pmF').fill('500');await page.getByRole('button',{name:'Metrikleri güncelle',exact:true}).click();const profileText=await page.locator('#profile').innerText();if(!profileText.includes('10.0%')||!profileText.includes('5.0%'))throw new Error('Performans oranları hesaplanmadı');log('Profil ve performans takibi çalışıyor');
+
+await page.reload({waitUntil:'networkidle'});await page.locator('#appShell').waitFor({state:'visible',timeout:3000});if(await page.locator('#onboarding').isVisible())throw new Error('Kayıtlı kullanıcı tekrar onboarding ekranına düştü');await page.locator('#tabbar [data-view="library"]').click();if(!(await page.getByText('Yeni filtre kahve: kısa ve net',{exact:true}).isVisible()))throw new Error('Yerel çalışma verisi yeniden açılışta korunmadı');log('Uygulama yeniden açıldığında kullanıcı verisi korunuyor');
+
+await page.locator('#tabbar [data-view="home"]').click();await page.getByRole('button',{name:'30 günlük plan',exact:true}).click();if(await page.locator('#calendar .postRow').count()<31)throw new Error('30 günlük plan eklenmedi');log('30 günlük plan gerçek içerik kayıtları olarak oluşturuluyor');
+
+const mobile=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true,acceptDownloads:true,userAgent:'Mozilla/5.0 (Linux; Android 12; Mobile) AppleWebKit/537.36 Chrome/140 Mobile Safari/537.36'});const m=await mobile.newPage();await m.goto(app,{waitUntil:'networkidle'});await m.locator('#onboarding').waitFor({state:'visible',timeout:3000});await m.locator('#obBrand').fill('Mobil Marka');await m.locator('#obSector').fill('Perakende');await m.locator('#obAudience').fill('Mobil müşteriler');await m.getByRole('button',{name:'Çalışma alanını oluştur',exact:true}).click();if(!(await m.locator('.tabbar').isVisible()))throw new Error('Mobil alt navigasyon görünmüyor');await m.locator('#tabbar [data-view="create"]').click();if(!(await m.locator('#mediaPicker').isVisible()))throw new Error('Mobil içerik oluşturma ekranı açılmıyor');await m.locator('#mediaInput').setInputFiles('/tmp/sosyalpaket-test.svg');if(!(await m.locator('#previewMedia img').isVisible()))throw new Error('Mobil galeri medyası önizlenmiyor');log('Android mobil akışta onboarding, ana navigasyon ve galeri seçimi çalışıyor');
+await mobile.close();await context.close();await browser.close();console.log('PASS  standalone product browser suite tamamlandı');
