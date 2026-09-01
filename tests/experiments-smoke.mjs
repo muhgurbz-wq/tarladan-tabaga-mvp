@@ -4,16 +4,17 @@ const hub=fs.readFileSync('experiments/index.html','utf8');
 const store=fs.readFileSync('experiments/store/index.html','utf8');
 const app=fs.readFileSync('experiments/apps/sosyalpaket/index.html','utf8');
 const appJs=fs.readFileSync('experiments/apps/sosyalpaket/app.js','utf8');
-const installer=fs.readFileSync('experiments/apps/sosyalpaket/install.html','utf8');
 const manifest=JSON.parse(fs.readFileSync('experiments/apps/sosyalpaket/manifest.webmanifest','utf8'));
 const sw=fs.readFileSync('experiments/apps/sosyalpaket/sw.js','utf8');
+const apkPath='experiments/downloads/SosyalPaket-Android.apk';
 const checks=[];const check=(n,o)=>{checks.push([n,!!o]);if(!o)process.exitCode=1};
 check('Hub lists 20 products',(hub.match(/\['[^']+','[^']+','[^']+'/g)||[]).length>=20);
-check('Hub routes installs to application center',hub.includes('store/')&&hub.includes('Güvenli kur'));
+check('Hub routes installs to application center',hub.includes('store/'));
 check('Store supports four platform families',['Android','iPhone / iPad','Windows','macOS'].every(x=>store.includes(x)));
-check('Store does not expose raw APK download',!store.includes('.apk')&&!installer.includes('.apk"')&&!installer.includes(".apk'"));
-check('Store distinguishes ready vs preparing',store.includes('Kullanılabilir')&&store.includes('Hazırlanıyor'));
-check('SosyalPaket uses modular application assets',app.includes('style.css')&&app.includes('app.js')&&appJs.includes("location.href='install.html'"));
+check('Android native package is published on platform',fs.existsSync(apkPath)&&fs.statSync(apkPath).size>10000);
+check('Store points to platform APK',store.includes('../downloads/SosyalPaket-Android.apk')&&store.includes('Android uygulamasını indir'));
+check('Store distinguishes Android ready and other packages preparing',store.includes('Android hazır')&&store.includes('Bu cihaz paketi hazırlanıyor'));
+check('SosyalPaket uses modular application assets',app.includes('style.css')&&app.includes('app.js'));
 check('SosyalPaket has six real views',['dashboard','setup','calendarView','library','analytics','settings'].every(x=>app.includes(`id="${x}"`)));
 check('30 day plan generator exists',appJs.includes('generatePlan()')&&appJs.includes('30 günlük planı üret'));
 check('Post editor exists',appJs.includes('editPost(')&&appJs.includes('savePost('));
@@ -21,13 +22,10 @@ check('Persistent local storage exists',appJs.includes('localStorage.getItem')&&
 check('CSV export exists',appJs.includes('exportCSV()')&&appJs.includes('text/csv;charset=utf-8'));
 check('Print/PDF exists',appJs.includes('printPlan()')&&appJs.includes('.print()'));
 check('Manual analytics calculations exist',appJs.includes('interactions/m.impressions')&&appJs.includes('clicks/m.impressions'));
-check('Professional installer handles system prompt',installer.includes('beforeinstallprompt')&&installer.includes('Güvenli kurulum'));
-check('Installer explains no executable package download',installer.includes('APK, EXE veya DMG')&&installer.includes('tarayıcının kendi resmi sistem penceresi'));
-check('Standalone app manifest',manifest.display==='standalone'&&manifest.scope==='./'&&manifest.id==='./');
-check('Manifest launch handler exists',manifest.launch_handler?.client_mode==='navigate-existing');
+check('Standalone web fallback manifest',manifest.display==='standalone'&&manifest.scope==='./'&&manifest.id==='./');
 check('Dedicated icon is used',manifest.icons?.some(x=>x.src==='icon.svg'));
-check('App service worker caches installer and assets',sw.includes("'./install.html'")&&sw.includes("'./app.js'")&&sw.includes("'./style.css'"));
+check('App service worker caches application assets',sw.includes("'./app.js'")&&sw.includes("'./style.css'"));
 check('App service worker force-upgrades',sw.includes('skipWaiting')&&sw.includes('clients.claim'));
 try{new vm.Script(appJs);check('app.js parses',true)}catch(e){console.error('app.js',e);check('app.js parses',false)}
-for(const [name,src] of [['hub',hub],['store',store],['installer',installer]]){const scripts=[...src.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m=>m[1]);check(name+' inline JavaScript parses',scripts.length>0&&scripts.every(s=>{try{new vm.Script(s);return true}catch(e){console.error(name,e);return false}}))}
+for(const [name,src] of [['hub',hub],['store',store]]){const scripts=[...src.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m=>m[1]);check(name+' inline JavaScript parses',scripts.length>0&&scripts.every(s=>{try{new vm.Script(s);return true}catch(e){console.error(name,e);return false}}))}
 for(const [n,o] of checks)console.log(`${o?'PASS':'FAIL'}  ${n}`);if(process.exitCode)throw new Error('Smoke test failed');console.log(`PASS  ${checks.length}/${checks.length} checks`);
