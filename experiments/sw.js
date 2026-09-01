@@ -1,4 +1,4 @@
-const CACHE='cozum-merkezi-v5';
+const CACHE='cozum-merkezi-v6';
 const CORE=['./','./index.html','./manifest.webmanifest','./icon.svg'];
 self.addEventListener('install',event=>{
   self.skipWaiting();
