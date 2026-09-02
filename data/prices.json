@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-02T16:38:15Z",
+  "generated_at": "2026-09-02T21:06:28Z",
   "pricing_rule": {
     "name": "Tarladan Tabağa YZ Fiyat Politikası",
     "farmer_sets_price": false,
@@ -15,10 +15,10 @@
   },
   "sources": {
     "hks": {
-      "ok": true,
+      "ok": false,
       "name": "T.C. Ticaret Bakanlığı Hal Kayıt Sistemi",
       "url": "https://www.hal.gov.tr/Sayfalar/FiyatDetaylari.aspx",
-      "data_date": "2026-09-02"
+      "error": "HKS ürün eşlemesi eksik: 0/3"
     },
     "tobb": {
       "ok": false,
