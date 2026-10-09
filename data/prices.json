@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-08T18:52:56Z",
+  "generated_at": "2026-10-09T01:15:04Z",
   "pricing_rule": {
     "name": "Tarladan Tabağa YZ Fiyat Politikası",
     "farmer_sets_price": false,
@@ -18,7 +18,7 @@
       "ok": false,
       "name": "T.C. Ticaret Bakanlığı Hal Kayıt Sistemi",
       "url": "https://www.hal.gov.tr/Sayfalar/FiyatDetaylari.aspx",
-      "error": "HTTPSConnectionPool(host='www.hal.gov.tr', port=443): Max retries exceeded with url: / (Caused by NameResolutionError(\"HTTPSConnection(host='www.hal.gov.tr', port=443): Failed to resolve 'www.hal.gov.tr' ([Errno -3] Temporary failure in nam"
+      "error": "HTTPSConnectionPool(host='www.hal.gov.tr', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: certificate has expired (_ssl.c:1010)')))"
     },
     "tobb": {
       "ok": false,
